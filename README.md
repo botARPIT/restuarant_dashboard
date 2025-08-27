@@ -1,188 +1,207 @@
-# Unified Restaurant Dashboard
+# RestaurantHub - Unified Restaurant Dashboard
 
-A comprehensive middleware aggregation platform that consolidates multiple food delivery services into a single management interface for restaurant owners.
+A comprehensive restaurant management dashboard that aggregates orders from multiple delivery platforms (Zomato, Swiggy, UberEats, Dunzo) into a single, unified interface.
 
-## 🎯 Project Overview
+## 🚀 Features
 
-The Unified Restaurant Dashboard is designed to solve the complexity restaurant owners face when managing orders across multiple delivery platforms (Swiggy, Zomato, UberEats, DoorDash, Grubhub, etc.). This centralized system provides:
+- **Multi-Platform Integration**: Manage orders from Zomato, Swiggy, UberEats, and Dunzo
+- **Real-time Dashboard**: Live order tracking and status updates
+- **Performance Analytics**: Platform-wise performance metrics and trends
+- **Order Management**: Complete order lifecycle management
+- **Responsive Design**: Modern, mobile-friendly interface
+- **RESTful API**: Scalable backend architecture
 
-- **Single Sign-Up Integration**: Connect all delivery platforms through one registration process
-- **Unified Order Management**: Handle all incoming orders from a single interface
-- **Real-Time Synchronization**: Live order status updates across all platforms
-- **Comprehensive Analytics**: Consolidated performance metrics and insights
-- **Scalable Architecture**: Built to handle high-volume restaurants
-
-## 🏗️ System Architecture
+## 🏗️ Project Structure
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                Frontend Dashboard                               │
-│            (React.js + Cloudflare Pages)                       │
-└─────────────────────┬───────────────────────────────────────────┘
-                      │
-┌─────────────────────┴───────────────────────────────────────────┐
-│                Cloudflare Workers                               │
-│              (Edge API + TypeScript)                           │
-└─────────────────────┬───────────────────────────────────────────┘
-                      │
-┌─────────────────────┴───────────────────────────────────────────┐
-│              Platform Integration Workers                       │
-│         ┌─────────┬─────────┬─────────┬─────────┐              │
-│         │ Swiggy  │ Zomato  │UberEats │DoorDash │              │
-│         │Worker   │Worker   │Worker   │Worker   │              │
-│         └─────────┴─────────┴─────────┴─────────┘              │
-└─────────────────────┬───────────────────────────────────────────┘
-                      │
-┌─────────────────────┴───────────────────────────────────────────┐
-│               Cloudflare Services                               │
-│  ┌──────────┬──────────┬──────────┬──────────┬──────────┐      │
-│  │Durable   │ Queues   │   KV     │    D1    │Analytics │      │
-│  │Objects   │(Messages)│(Cache)   │(SQLite)  │ Engine   │      │
-│  └──────────┴──────────┴──────────┴──────────┴──────────┘      │
-└─────────────────────┬───────────────────────────────────────────┘
-                      │
-┌─────────────────────┴───────────────────────────────────────────┐
-│                External Data Stores                            │
-│   ┌─────────────┬─────────────┬─────────────┬─────────────┐    │
-│   │  PlanetScale│ Upstash     │ Cloudflare  │   Third     │    │
-│   │  (MySQL)    │ (Redis)     │   R2        │   Party     │    │
-│   └─────────────┴─────────────┴─────────────┴─────────────┘    │
-└─────────────────────────────────────────────────────────────────┘
+├── frontend/                 # React + TypeScript frontend
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   ├── types/          # TypeScript type definitions
+│   │   ├── utils/          # Utility functions and data
+│   │   ├── App.tsx         # Main application component
+│   │   └── main.tsx        # Application entry point
+│   ├── package.json        # Frontend dependencies
+│   └── tailwind.config.js  # Tailwind CSS configuration
+├── backend/                 # Node.js + Express backend
+│   ├── src/
+│   │   ├── controllers/    # API controllers
+│   │   ├── routes/         # API routes
+│   │   ├── types/          # TypeScript type definitions
+│   │   └── index.ts        # Server entry point
+│   ├── package.json        # Backend dependencies
+│   └── tsconfig.json       # TypeScript configuration
+├── shared/                  # Shared types and utilities
+└── package.json            # Root package.json with workspaces
 ```
 
-## 🚀 Quick Start
+## 🛠️ Tech Stack
+
+### Frontend
+- **React 18** with TypeScript
+- **Tailwind CSS** for styling
+- **Vite** for build tooling
+- **Lucide React** for icons
+- **React Router** for navigation
+
+### Backend
+- **Node.js** with TypeScript
+- **Express.js** framework
+- **RESTful API** architecture
+- **Rate limiting** and security middleware
+- **Mock data** (ready for database integration)
+
+## 📦 Installation
 
 ### Prerequisites
-- Node.js 18+
-- Cloudflare Account
-- Wrangler CLI
-- PlanetScale Account (optional)
-- Upstash Account (optional)
+- Node.js 18+ 
+- npm 9+
 
-### Installation
+### Quick Start
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd restaurant-dashboard
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Setup environment variables**
+   ```bash
+   cp frontend/.env.example frontend/.env
+   cp backend/.env.example backend/.env
+   ```
+
+4. **Start development servers**
+   ```bash
+   npm run dev
+   ```
+
+This will start both frontend (port 3000) and backend (port 5000) in development mode.
+
+## 🚀 Available Scripts
+
+### Root Level
+- `npm run dev` - Start both frontend and backend in development mode
+- `npm run build` - Build both frontend and backend
+- `npm run test` - Run tests for both frontend and backend
+
+### Frontend
+- `npm run frontend:dev` - Start frontend development server
+- `npm run frontend:build` - Build frontend for production
+- `npm run frontend:preview` - Preview production build
+
+### Backend
+- `npm run backend:dev` - Start backend development server
+- `npm run backend:build` - Build backend for production
+- `npm run backend:start` - Start production backend server
+
+## 🌐 API Endpoints
+
+### Dashboard
+- `GET /api/dashboard/stats` - Get dashboard overview statistics
+- `GET /api/dashboard/trends` - Get daily trends data
+
+### Orders
+- `GET /api/orders` - Get all orders with pagination
+- `GET /api/orders/:id` - Get order by ID
+- `POST /api/orders` - Create new order
+- `PATCH /api/orders/:id/status` - Update order status
+- `GET /api/orders/platform/:platform` - Get orders by platform
+- `GET /api/orders/status/:status` - Get orders by status
+
+### Platforms
+- `GET /api/platforms` - Get all platforms
+- `GET /api/platforms/:id` - Get platform by ID
+- `PATCH /api/platforms/:id/status` - Update platform status
+- `GET /api/platforms/:id/stats` - Get platform statistics
+
+## 🎨 UI Components
+
+The dashboard includes:
+
+- **Sidebar Navigation**: Dashboard, Orders, Analytics, Menu Management, Customers, Notifications, Settings
+- **Header**: Search, Filter, and Notification controls
+- **KPI Cards**: Total Orders, Revenue, Active Orders, Completion Rate
+- **Recent Orders**: Live order tracking with status indicators
+- **Platform Performance**: Platform-wise metrics and status
+
+## 🔧 Development
+
+### Frontend Development
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd unified-restaurant-dashboard
-
-# Install dependencies
-npm install
-
-# Install Wrangler CLI
-npm install -g wrangler
-
-# Login to Cloudflare
-wrangler auth login
-
-# Setup environment variables
-cp .env.example .env
-
-# Start development servers
+cd frontend
 npm run dev
 ```
 
-## 📁 Project Structure
+The frontend will be available at `http://localhost:3000`
 
-```
-unified-restaurant-dashboard/
-├── frontend/                 # React.js dashboard (Cloudflare Pages)
-├── workers/                  # Cloudflare Workers API services
-├── adapters/                 # Platform-specific integrations
-├── shared/                   # Common types and utilities
-├── infrastructure/           # Cloudflare configurations
-├── docs/                     # Documentation
-└── tests/                    # Test suites
+### Backend Development
+```bash
+cd backend
+npm run dev
 ```
 
-## 🔧 Technology Stack
+The backend API will be available at `http://localhost:5000`
 
-- **Frontend**: React.js, TypeScript, Material-UI, React Query
-- **Backend**: Cloudflare Workers, TypeScript, Hono.js
-- **Databases**: Cloudflare D1 (SQLite), Planetscale (MySQL), Upstash Redis
-- **Message Queue**: Cloudflare Queues
-- **Real-time**: Cloudflare Durable Objects, WebSockets
-- **Authentication**: Cloudflare Access, JWT, OAuth 2.0
-- **Infrastructure**: Cloudflare Workers, Pages, KV Storage
-- **Monitoring**: Cloudflare Analytics, Sentry
-- **Testing**: Jest, Cypress, Vitest
+### API Testing
+Test the backend API using the health check endpoint:
+```bash
+curl http://localhost:5000/health
+```
 
-## 📊 Key Features
+## 🚀 Deployment
 
-### 1. Integration Capabilities
-- **Multi-Platform API Connections**: Standardized adapters for each delivery service
-- **Real-Time Data Synchronization**: WebSocket-based live updates
-- **Rate Limit Management**: Intelligent request scheduling and caching
+### Frontend Deployment
+```bash
+cd frontend
+npm run build
+```
 
-### 2. Order Management
-- **Unified Order Processing**: Standardized order format across platforms
-- **Status Tracking**: Real-time order status updates
-- **Bulk Operations**: Batch processing for high-volume restaurants
+The built files will be in the `dist/` directory, ready for deployment to any static hosting service.
 
-### 3. Analytics & Reporting
-- **Performance Metrics**: Sales, delivery times, customer satisfaction
-- **Comparative Analysis**: Platform performance comparison
-- **Custom Reports**: Configurable reporting dashboard
+### Backend Deployment
+```bash
+cd backend
+npm run build
+npm start
+```
 
-### 4. User Experience
-- **Intuitive Dashboard**: Clean, responsive interface
-- **Mobile Optimization**: Full mobile responsiveness
-- **Customizable Views**: Personalized dashboard layouts
+The backend can be deployed to any Node.js hosting platform.
 
-## 🔐 Security & Compliance
+## 🔮 Future Enhancements
 
-- **Data Encryption**: End-to-end encryption for data transmission
-- **Authentication**: Multi-factor authentication support
-- **Compliance**: GDPR, CCPA, PCI DSS compliance
-- **Audit Logs**: Comprehensive activity logging
-
-## 💰 Monetization Strategy
-
-### Pricing Tiers
-1. **Starter** ($29/month): Up to 500 orders, 3 platforms
-2. **Professional** ($99/month): Up to 2000 orders, all platforms
-3. **Enterprise** (Custom): Unlimited orders, custom features
-
-### Revenue Streams
-- Subscription fees
-- Transaction fees (optional)
-- Premium features and add-ons
-- White-label solutions
-
-## 🎯 Go-to-Market Strategy
-
-### Phase 1: MVP Launch (Months 1-3)
-- Core integration with top 3 platforms
-- Basic order management
-- Simple analytics
-
-### Phase 2: Feature Expansion (Months 4-6)
-- Advanced analytics
-- Menu synchronization
-- Mobile app
-
-### Phase 3: Scale & Enterprise (Months 7-12)
-- Enterprise features
-- White-label offerings
-- International expansion
-
-## 📈 Success Metrics
-
-- **User Acquisition**: 1000+ restaurants in first year
-- **Platform Integration**: 8+ major delivery platforms
-- **Order Processing**: 99.9% uptime, <2s response time
-- **Customer Satisfaction**: >4.5/5 rating
-- **Revenue**: $1M+ ARR by end of year 1
+- **Database Integration**: MongoDB/PostgreSQL integration
+- **Real-time Updates**: WebSocket implementation for live order updates
+- **Authentication**: JWT-based user authentication
+- **Push Notifications**: Browser and mobile push notifications
+- **Advanced Analytics**: Detailed reporting and insights
+- **Mobile App**: React Native mobile application
+- **Multi-tenant Support**: Support for multiple restaurants
 
 ## 🤝 Contributing
 
-Please read [CONTRIBUTING.md](docs/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-## 📝 License
+## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License.
 
-## 📞 Support
+## 🆘 Support
 
-- Email: support@unifiedrestaurant.com
-- Documentation: https://docs.unifiedrestaurant.com
-- Community: https://community.unifiedrestaurant.com
+For support and questions:
+- Check the documentation
+- Open an issue on GitHub
+- Contact the development team
+
+---
+
+**RestaurantHub** - Simplifying restaurant management across multiple delivery platforms 🍕🍔🍜
