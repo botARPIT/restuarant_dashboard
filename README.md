@@ -16,36 +16,36 @@ The Unified Restaurant Dashboard is designed to solve the complexity restaurant 
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Frontend Dashboard                           │
-│              (React.js + TypeScript)                           │
+│                Frontend Dashboard                               │
+│            (React.js + Cloudflare Pages)                       │
 └─────────────────────┬───────────────────────────────────────────┘
                       │
 ┌─────────────────────┴───────────────────────────────────────────┐
-│                   API Gateway                                   │
-│              (Node.js + Express)                               │
+│                Cloudflare Workers                               │
+│              (Edge API + TypeScript)                           │
 └─────────────────────┬───────────────────────────────────────────┘
                       │
 ┌─────────────────────┴───────────────────────────────────────────┐
-│                Integration Layer                                │
+│              Platform Integration Workers                       │
 │         ┌─────────┬─────────┬─────────┬─────────┐              │
 │         │ Swiggy  │ Zomato  │UberEats │DoorDash │              │
-│         │Adapter  │Adapter  │Adapter  │Adapter  │              │
+│         │Worker   │Worker   │Worker   │Worker   │              │
 │         └─────────┴─────────┴─────────┴─────────┘              │
 └─────────────────────┬───────────────────────────────────────────┘
                       │
 ┌─────────────────────┴───────────────────────────────────────────┐
-│                  Core Services                                  │
+│               Cloudflare Services                               │
 │  ┌──────────┬──────────┬──────────┬──────────┬──────────┐      │
-│  │Order Mgmt│Analytics │Menu Sync │Notification│Security │      │
-│  │ Service  │ Service  │ Service  │  Service   │Service  │      │
+│  │Durable   │ Queues   │   KV     │    D1    │Analytics │      │
+│  │Objects   │(Messages)│(Cache)   │(SQLite)  │ Engine   │      │
 │  └──────────┴──────────┴──────────┴──────────┴──────────┘      │
 └─────────────────────┬───────────────────────────────────────────┘
                       │
 ┌─────────────────────┴───────────────────────────────────────────┐
-│                    Database Layer                               │
+│                External Data Stores                            │
 │   ┌─────────────┬─────────────┬─────────────┬─────────────┐    │
-│   │   Orders    │   Menus     │ Analytics   │   Users     │    │
-│   │ (MongoDB)   │ (MongoDB)   │(TimeSeries) │(PostgreSQL) │    │
+│   │  PlanetScale│ Upstash     │ Cloudflare  │   Third     │    │
+│   │  (MySQL)    │ (Redis)     │   R2        │   Party     │    │
 │   └─────────────┴─────────────┴─────────────┴─────────────┘    │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -54,9 +54,10 @@ The Unified Restaurant Dashboard is designed to solve the complexity restaurant 
 
 ### Prerequisites
 - Node.js 18+
-- MongoDB 6.0+
-- PostgreSQL 14+
-- Redis 6.0+
+- Cloudflare Account
+- Wrangler CLI
+- PlanetScale Account (optional)
+- Upstash Account (optional)
 
 ### Installation
 ```bash
@@ -66,6 +67,12 @@ cd unified-restaurant-dashboard
 
 # Install dependencies
 npm install
+
+# Install Wrangler CLI
+npm install -g wrangler
+
+# Login to Cloudflare
+wrangler auth login
 
 # Setup environment variables
 cp .env.example .env
@@ -78,11 +85,11 @@ npm run dev
 
 ```
 unified-restaurant-dashboard/
-├── frontend/                 # React.js dashboard
-├── backend/                  # Node.js API services
+├── frontend/                 # React.js dashboard (Cloudflare Pages)
+├── workers/                  # Cloudflare Workers API services
 ├── adapters/                 # Platform-specific integrations
 ├── shared/                   # Common types and utilities
-├── infrastructure/           # Docker, K8s configurations
+├── infrastructure/           # Cloudflare configurations
 ├── docs/                     # Documentation
 └── tests/                    # Test suites
 ```
@@ -90,14 +97,14 @@ unified-restaurant-dashboard/
 ## 🔧 Technology Stack
 
 - **Frontend**: React.js, TypeScript, Material-UI, React Query
-- **Backend**: Node.js, Express.js, TypeScript
-- **Databases**: MongoDB, PostgreSQL, Redis
-- **Message Queue**: Redis Bull Queue
-- **Real-time**: Socket.io
-- **Authentication**: JWT, OAuth 2.0
-- **Infrastructure**: Docker, Kubernetes, AWS/GCP
-- **Monitoring**: Prometheus, Grafana
-- **Testing**: Jest, Cypress
+- **Backend**: Cloudflare Workers, TypeScript, Hono.js
+- **Databases**: Cloudflare D1 (SQLite), Planetscale (MySQL), Upstash Redis
+- **Message Queue**: Cloudflare Queues
+- **Real-time**: Cloudflare Durable Objects, WebSockets
+- **Authentication**: Cloudflare Access, JWT, OAuth 2.0
+- **Infrastructure**: Cloudflare Workers, Pages, KV Storage
+- **Monitoring**: Cloudflare Analytics, Sentry
+- **Testing**: Jest, Cypress, Vitest
 
 ## 📊 Key Features
 
