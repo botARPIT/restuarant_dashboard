@@ -1,56 +1,35 @@
 {
   "name": "unified-restaurant-dashboard",
   "version": "1.0.0",
-  "description": "A comprehensive middleware aggregation platform for restaurant delivery management",
-  "main": "dist/index.js",
+  "description": "A comprehensive middleware aggregation platform for restaurant delivery management - DEMO VERSION",
+  "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
-    "backend:dev": "cd backend && npm run dev",
+    "backend:dev": "cd workers && npm run dev",
     "frontend:dev": "cd frontend && npm run dev",
     "build": "npm run backend:build && npm run frontend:build",
-    "backend:build": "cd backend && npm run build",
+    "backend:build": "cd workers && npm run build",
     "frontend:build": "cd frontend && npm run build",
-    "test": "npm run backend:test && npm run frontend:test",
-    "backend:test": "cd backend && npm test",
-    "frontend:test": "cd frontend && npm test",
-    "test:e2e": "cypress run",
-    "test:e2e:open": "cypress open",
-    "lint": "eslint . --ext .ts,.tsx --fix",
-    "docker:build": "docker-compose build",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "k8s:deploy": "kubectl apply -f infrastructure/k8s/",
-    "setup": "npm install && npm run setup:backend && npm run setup:frontend",
-    "setup:backend": "cd backend && npm install",
-    "setup:frontend": "cd frontend && npm install"
+    "deploy": "./deploy.sh",
+    "setup": "npm run setup:backend && npm run setup:frontend",
+    "setup:backend": "cd workers && npm install",
+    "setup:frontend": "cd frontend && npm install",
+    "install-all": "npm install && npm run setup",
+    "clean": "rm -rf frontend/node_modules frontend/dist workers/node_modules workers/dist"
   },
   "keywords": [
     "restaurant",
     "delivery",
-    "aggregation",
     "dashboard",
-    "food-tech",
-    "middleware"
+    "cloudflare",
+    "workers",
+    "demo"
   ],
-  "author": "Unified Restaurant Dashboard Team",
+  "author": "Restaurant Dashboard Team",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "concurrently": "^8.2.0",
-    "cypress": "^13.0.0",
-    "eslint": "^8.45.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "prettier": "^3.0.0",
-    "typescript": "^5.1.0"
+    "concurrently": "^8.2.0"
   },
-  "workspaces": [
-    "backend",
-    "frontend",
-    "shared"
-  ],
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"

@@ -3,57 +3,9 @@ main = "src/index.ts"
 compatibility_date = "2023-12-01"
 compatibility_flags = ["nodejs_compat"]
 
-# Workers AI for intelligent features
-[ai]
-binding = "AI"
-
-# Durable Objects for real-time order management
-[[durable_objects.bindings]]
-name = "ORDER_MANAGER"
-class_name = "OrderManager"
-
-[[durable_objects.bindings]]
-name = "REAL_TIME_SYNC"
-class_name = "RealTimeSync"
-
-# KV Storage for caching and session management
-[[kv_namespaces]]
-binding = "CACHE"
-id = "cache_namespace"
-preview_id = "cache_preview"
-
-[[kv_namespaces]]
-binding = "SESSIONS"
-id = "sessions_namespace" 
-preview_id = "sessions_preview"
-
-# D1 Database for core data
-[[d1_databases]]
-binding = "DB"
-database_name = "restaurant_dashboard"
-database_id = "your_d1_database_id"
-
-# Queues for background processing
-[[queues.producers]]
-binding = "ORDER_QUEUE"
-queue = "order-processing"
-
-[[queues.producers]]
-binding = "ANALYTICS_QUEUE"
-queue = "analytics-processing"
-
-[[queues.producers]]
-binding = "NOTIFICATION_QUEUE"
-queue = "notification-processing"
-
 # Environment variables
 [vars]
 ENVIRONMENT = "development"
-JWT_SECRET = "your-jwt-secret"
-SWIGGY_API_URL = "https://api.swiggy.com"
-ZOMATO_API_URL = "https://api.zomato.com"
-UBEREATS_API_URL = "https://api.ubereats.com"
-DOORDASH_API_URL = "https://api.doordash.com"
 
 # Staging environment
 [env.staging]
@@ -63,26 +15,6 @@ ENVIRONMENT = "staging"
 
 # Production environment  
 [env.production]
-name = "restaurant-dashboard-api"
+name = "restaurant-dashboard-api-prod"
 [env.production.vars]
 ENVIRONMENT = "production"
-
-# Queue consumers
-[[queues.consumers]]
-queue = "order-processing"
-max_batch_size = 10
-max_batch_timeout = 30
-max_retries = 3
-dead_letter_queue = "order-processing-dlq"
-
-[[queues.consumers]]
-queue = "analytics-processing"
-max_batch_size = 50
-max_batch_timeout = 60
-max_retries = 2
-
-[[queues.consumers]]
-queue = "notification-processing"
-max_batch_size = 20
-max_batch_timeout = 15
-max_retries = 3
