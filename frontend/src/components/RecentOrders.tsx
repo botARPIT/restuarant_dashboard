@@ -1,5 +1,6 @@
 import React from 'react';
-import { Order, getStatusColor, getStatusText, getPlatformIcon, getPlatformColor } from '../utils/data';
+import type { Order } from '../types';
+import { getStatusColor, getStatusText, getPlatformIcon, getPlatformColor } from '../utils/data';
 
 interface RecentOrdersProps {
   orders: Order[];

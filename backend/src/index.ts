@@ -14,7 +14,8 @@ import dashboardRoutes from './routes/dashboardRoutes';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = parseInt(process.env.PORT || '5000', 10);
+const HOST = process.env.HOST || '0.0.0.0';
 
 // Rate limiting
 const limiter = rateLimit({
@@ -62,9 +63,10 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Restaurant Dashboard API server running on port ${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/health`);
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Restaurant Dashboard API server running on http://${HOST}:${PORT}`);
+  console.log(`📊 Health check: http://${HOST}:${PORT}/health`);
+  console.log(`🌐 Access from host: http://localhost:${PORT}`);
 });
 
 export default app;
