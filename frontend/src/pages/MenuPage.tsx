@@ -1,0 +1,1 @@
+import React from 'react'; export default function MenuPage(){ return (<div className="p-6"><div className="card"><h2 className="text-xl font-semibold mb-2">Menu Management</h2><p className="text-gray-600">Create and edit menu items here.</p></div></div>); }

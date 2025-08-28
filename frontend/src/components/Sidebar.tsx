@@ -1,8 +1,19 @@
 import React from 'react';
 import { navigationItems } from '../utils/data';
 import { HelpCircle, LogOut } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Sidebar: React.FC = () => {
+  const routeMap: Record<string, string> = {
+    Dashboard: '/',
+    Orders: '/orders',
+    Analytics: '/analytics',
+    'Menu Management': '/menu',
+    Customers: '/customers',
+    Notifications: '/notifications',
+    Settings: '/settings',
+  };
+
   return (
     <div className="w-64 bg-gray-50 h-screen flex flex-col">
       {/* Logo */}
@@ -21,10 +32,11 @@ const Sidebar: React.FC = () => {
       <nav className="flex-1 px-4 py-6 space-y-2">
         {navigationItems.map((item) => {
           const Icon = item.icon;
+          const to = routeMap[item.name] || '#';
           return (
-            <a
+            <Link
               key={item.name}
-              href={item.href}
+              to={to}
               className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
                 item.current
                   ? 'bg-primary-600 text-white'
@@ -44,7 +56,7 @@ const Sidebar: React.FC = () => {
                   {item.badge}
                 </span>
               )}
-            </a>
+            </Link>
           );
         })}
       </nav>

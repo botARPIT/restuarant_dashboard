@@ -1,0 +1,1 @@
+import React from 'react'; export default function OrdersPage(){ return (<div className="p-6"><div className="card"><h2 className="text-xl font-semibold mb-2">Orders</h2><p className="text-gray-600">Orders list and management will appear here.</p></div></div>); }

@@ -1,0 +1,1 @@
+import React from 'react'; export default function NotificationsPage(){ return (<div className="p-6"><div className="card"><h2 className="text-xl font-semibold mb-2">Notifications</h2><p className="text-gray-600">Alerts and messages will appear here.</p></div></div>); }

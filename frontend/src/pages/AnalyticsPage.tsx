@@ -1,0 +1,1 @@
+import React from 'react'; export default function AnalyticsPage(){ return (<div className="p-6"><div className="card"><h2 className="text-xl font-semibold mb-2">Analytics</h2><p className="text-gray-600">Charts and insights will appear here.</p></div></div>); }

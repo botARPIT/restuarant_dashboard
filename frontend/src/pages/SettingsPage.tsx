@@ -1,0 +1,1 @@
+import React from 'react'; export default function SettingsPage(){ return (<div className="p-6"><div className="card"><h2 className="text-xl font-semibold mb-2">Settings</h2><p className="text-gray-600">Configure your preferences here.</p></div></div>); }
