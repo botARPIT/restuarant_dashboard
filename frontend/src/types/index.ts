@@ -1,3 +1,5 @@
+import type { ComponentType } from 'react';
+
 export interface Order {
   id: string;
   status: 'preparing' | 'ready' | 'delivered' | 'cancelled';
@@ -24,12 +26,12 @@ export interface KPI {
   value: string | number;
   change: string;
   changeType: 'positive' | 'negative' | 'neutral';
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
 }
 
 export interface NavigationItem {
   name: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
   href: string;
   badge?: number;
   current?: boolean;

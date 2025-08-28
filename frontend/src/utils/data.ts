@@ -3,7 +3,7 @@ import {
   DollarSign, 
   Clock, 
   CheckCircle,
-  Grid3X3,
+  LayoutDashboard,
   BarChart3,
   List,
   Users,
@@ -17,7 +17,7 @@ import {
 import { KPI, Order, Platform, NavigationItem } from '../types';
 
 export const navigationItems: NavigationItem[] = [
-  { name: 'Dashboard', icon: Grid3X3, href: '#', current: true },
+  { name: 'Dashboard', icon: LayoutDashboard, href: '#', current: true },
   { name: 'Orders', icon: ShoppingBag, href: '#', badge: 12 },
   { name: 'Analytics', icon: BarChart3, href: '#' },
   { name: 'Menu Management', icon: List, href: '#' },
