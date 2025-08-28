@@ -160,7 +160,7 @@
   
   /* Floating Action Button */
   .fab {
-    @apply fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-2xl shadow-blue-600/30 hover:shadow-3xl hover:shadow-blue-600/40 transform hover:scale-110 transition-all duration-300 flex items-center justify-center;
+    @apply fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-2xl shadow-blue-600/30 hover:shadow-2xl hover:shadow-blue-600/50 transform hover:scale-110 transition-all duration-300 flex items-center justify-center;
   }
   
   /* Modern Scrollbar */
