@@ -9,6 +9,10 @@ import rateLimit from 'express-rate-limit';
 import orderRoutes from './routes/orderRoutes';
 import platformRoutes from './routes/platformRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
+import customersRoutes from './routes/customersRoutes';
+import menuRoutes from './routes/menuRoutes';
+import notificationsRoutes from './routes/notificationsRoutes';
+import analyticsRoutes from './routes/analyticsRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -35,6 +39,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/orders', orderRoutes);
 app.use('/api/platforms', platformRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/customers', customersRoutes);
+app.use('/api/menu', menuRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
