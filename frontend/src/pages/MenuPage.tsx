@@ -1,21 +1,21 @@
-import React from react;
-import { useEffect, useState } from react;
-import { getJSON, sendJSON } from ../utils/api;
+import React from 'react';
+import { useEffect, useState } from 'react';
+import { getJSON, sendJSON } from '../utils/api';
 
 type Item = { id:string; name:string; price:number; category?:string; available:boolean };
 
 export default function MenuPage(){
   const [items, setItems] = useState<Item[]>([]);
-  const [name, setName] = useState();
+  const [name, setName] = useState('');
   const [price, setPrice] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
-  const load = () => getJSON<{success:boolean; data:Item[]}>(/menu/items).then(r => setItems(r.data)).finally(()=>setLoading(false));
+  const load = () => getJSON<{success:boolean; data:Item[]}>('/menu/items').then(r => setItems(r.data)).finally(()=>setLoading(false));
   useEffect(() => { load(); }, []);
 
   const add = async () => {
-    await sendJSON(/menu/items,POST,{ name, price });
-    setName(); setPrice(0);
+    await sendJSON('/menu/items','POST',{ name, price });
+    setName(''); setPrice(0);
     load();
   }
 

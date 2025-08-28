@@ -1,6 +1,6 @@
-import React from react;
-import { useEffect, useState } from react;
-import { getJSON } from ../utils/api;
+import React from 'react';
+import { useEffect, useState } from 'react';
+import { getJSON } from '../utils/api';
 
 type Order = { id: string; customer: string; status: string; totalPrice?: number; price?: number; platform?: string; time?: string; };
 

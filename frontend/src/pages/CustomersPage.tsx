@@ -1,12 +1,12 @@
-import React from react;
-import { useEffect, useState } from react;
-import { getJSON } from ../utils/api;
+import React from 'react';
+import { useEffect, useState } from 'react';
+import { getJSON } from '../utils/api';
 
 type Customer = { id:string; name:string; email:string; phone?:string; totalOrders:number };
 
 export default function CustomersPage(){
   const [customers, setCustomers] = useState<Customer[]>([]);
-  useEffect(() => { getJSON<{success:boolean; data:Customer[]}>(/customers).then(r => setCustomers(r.data)); }, []);
+  useEffect(() => { getJSON<{success:boolean; data:Customer[]}>('/customers').then(r => setCustomers(r.data)); }, []);
   return (<div className="p-6">
     <div className="card">
       <h2 className="text-xl font-semibold mb-2">Customers</h2>

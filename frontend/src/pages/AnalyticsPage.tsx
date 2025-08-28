@@ -1,6 +1,6 @@
-import React from react;
-import { useEffect, useState } from react;
-import { getJSON } from ../utils/api;
+import React from 'react';
+import { useEffect, useState } from 'react';
+import { getJSON } from '../utils/api';
 
 export default function AnalyticsPage(){
   const [summary, setSummary] = useState<any>();
@@ -28,7 +28,7 @@ export default function AnalyticsPage(){
       <h3 className="font-semibold mb-2">Last 7 days</h3>
       <div className="space-y-2">
         {trends.map((d:any) => (<div key={d.date} className="flex justify-between text-sm">
-          <span className="text-gray-600">{d.date}</</span>
+          <span className="text-gray-600">{d.date}</span>
           <span>Orders: {d.orders} • Revenue: ₹{d.revenue}</span>
         </div>))}
       </div>
