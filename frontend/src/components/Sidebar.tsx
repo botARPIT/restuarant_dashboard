@@ -1,83 +1,80 @@
 import React from 'react';
-import { navigationItems } from '../utils/data';
-import { HelpCircle, LogOut } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  ShoppingCart, 
+  BarChart3, 
+  UtensilsCrossed, 
+  Users, 
+  Bell, 
+  Settings,
+  TrendingUp
+} from 'lucide-react';
+import { NavigationItem } from '../types';
+
+const navigationItems: NavigationItem[] = [
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard, badge: null },
+  { name: 'Orders', href: '/orders', icon: ShoppingCart, badge: '12' },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3, badge: null },
+  { name: 'Menu', href: '/menu', icon: UtensilsCrossed, badge: '3' },
+  { name: 'Customers', href: '/customers', icon: Users, badge: null },
+  { name: 'Notifications', href: '/notifications', icon: Bell, badge: '5' },
+  { name: 'Settings', href: '/settings', icon: Settings, badge: null },
+];
 
 const Sidebar: React.FC = () => {
-  const routeMap: Record<string, string> = {
-    Dashboard: '/',
-    Orders: '/orders',
-    Analytics: '/analytics',
-    'Menu Management': '/menu',
-    Customers: '/customers',
-    Notifications: '/notifications',
-    Settings: '/settings',
-  };
+  const location = useLocation();
 
   return (
-    <div className="w-64 bg-gray-50 h-screen flex flex-col">
-      {/* Logo */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-            </svg>
+    <div className="w-64 bg-white border-r border-gray-100 flex flex-col">
+      {/* Logo Section */}
+      <div className="p-6 border-b border-gray-100">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
+            <TrendingUp className="w-6 h-6 text-white" />
           </div>
-          <span className="text-xl font-bold text-gray-900">RestaurantHub</span>
+          <div>
+            <h1 className="text-xl font-bold text-gray-900">Restaurant</h1>
+            <p className="text-sm text-gray-500">Dashboard</p>
+          </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 space-y-2">
+      <nav className="flex-1 p-4 space-y-2">
         {navigationItems.map((item) => {
+          const isActive = location.pathname === item.href;
           const Icon = item.icon;
-          const to = routeMap[item.name] || '#';
+          
           return (
-            <Link
+            <a
               key={item.name}
-              to={to}
-              className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                item.current
-                  ? 'bg-primary-600 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
+              href={item.href}
+              className={`nav-link ${isActive ? 'active' : ''}`}
             >
-              <div className="flex items-center space-x-3">
-                <Icon className={`w-5 h-5 ${item.current ? 'text-white' : 'text-gray-500'}`} />
-                <span>{item.name}</span>
-              </div>
+              <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+              <span className="flex-1 font-medium">{item.name}</span>
               {item.badge && (
-                <span className={`px-2 py-1 text-xs rounded-full ${
-                  item.current 
-                    ? 'bg-white text-primary-600' 
-                    : 'bg-primary-100 text-primary-600'
-                }`}>
+                <span className="badge badge-info">
                   {item.badge}
                 </span>
               )}
-            </Link>
+            </a>
           );
         })}
       </nav>
 
-      {/* Help Section */}
-      <div className="p-4 border-t border-gray-200">
-        <div className="bg-blue-50 rounded-lg p-4 mb-4">
-          <div className="flex items-center space-x-2 mb-2">
-            <HelpCircle className="w-5 h-5 text-blue-600" />
-            <span className="text-sm font-medium text-blue-900">Need Help?</span>
+      {/* User Section */}
+      <div className="p-4 border-t border-gray-100">
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+          <div className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center">
+            <span className="text-sm font-medium text-white">A</span>
           </div>
-          <p className="text-xs text-blue-700 mb-3">Check our documentation</p>
-          <button className="w-full bg-blue-600 text-white text-sm py-2 px-3 rounded-md hover:bg-blue-700 transition-colors duration-200">
-            Support
-          </button>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-gray-900 truncate">Admin User</p>
+            <p className="text-xs text-gray-500 truncate">admin@restaurant.com</p>
+          </div>
         </div>
-        
-        <button className="w-full flex items-center justify-center space-x-2 text-gray-600 hover:text-gray-800 py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-          <LogOut className="w-4 h-4" />
-          <span className="text-sm font-medium">Sign Out</span>
-        </button>
       </div>
     </div>
   );

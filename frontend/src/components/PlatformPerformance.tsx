@@ -1,6 +1,7 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, CheckCircle, AlertCircle } from 'lucide-react';
 import { Platform } from '../types';
+import { getPlatformColor } from '../utils/data';
+import { TrendingUp, Users, ShoppingCart } from 'lucide-react';
 
 interface PlatformPerformanceProps {
   platforms: Platform[];
@@ -9,53 +10,52 @@ interface PlatformPerformanceProps {
 const PlatformPerformance: React.FC<PlatformPerformanceProps> = ({ platforms }) => {
   return (
     <div className="card">
-      <h3 className="text-lg font-semibold text-gray-900 mb-6">Platform Performance</h3>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold text-gray-900">Platform Performance</h2>
+        <button className="btn-outline text-sm">View Details</button>
+      </div>
       
       <div className="space-y-4">
         {platforms.map((platform) => (
-          <div key={platform.name} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-            <div className="flex items-center space-x-3">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-lg font-bold ${platform.color}`}>
-                {platform.icon}
+          <div key={platform.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-150">
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getPlatformColor(platform.name)}`}>
+                <span className="text-white font-semibold text-sm">
+                  {platform.name.charAt(0).toUpperCase()}
+                </span>
               </div>
               <div>
-                <h4 className="font-medium text-gray-900">{platform.name}</h4>
-                <div className="flex items-center space-x-2">
-                  {platform.status === 'active' ? (
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                  ) : (
-                    <AlertCircle className="w-4 h-4 text-red-500" />
-                  )}
-                  <span className={`text-xs ${
-                    platform.status === 'active' ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {platform.status === 'active' ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
+                <h3 className="font-medium text-gray-900">{platform.name}</h3>
+                <p className="text-sm text-gray-500">{platform.description}</p>
               </div>
             </div>
             
-            <div className="text-right">
-              <div className="text-sm text-gray-600">
-                <p>{platform.orders} orders today</p>
-                <p className="font-medium text-gray-900">₹{platform.revenue.toLocaleString()}</p>
+            <div className="flex items-center gap-6">
+              <div className="text-center">
+                <div className="flex items-center gap-1 text-sm text-gray-600">
+                  <Users className="w-4 h-4" />
+                  <span>Orders</span>
+                </div>
+                <div className="font-semibold text-gray-900">{platform.orderCount}</div>
               </div>
               
-              {platform.status === 'active' && (
-                <div className="flex items-center space-x-1 mt-2">
-                  {platform.change > 0 ? (
-                    <TrendingUp className="w-4 h-4 text-green-500" />
-                  ) : platform.change < 0 ? (
-                    <TrendingDown className="w-4 h-4 text-red-500" />
-                  ) : null}
-                  <span className={`text-xs ${
-                    platform.change > 0 ? 'text-green-600' : 
-                    platform.change < 0 ? 'text-red-600' : 'text-gray-600'
-                  }`}>
-                    {platform.change > 0 ? '+' : ''}{platform.change}%
-                  </span>
+              <div className="text-center">
+                <div className="flex items-center gap-1 text-sm text-gray-600">
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>Revenue</span>
                 </div>
-              )}
+                <div className="font-semibold text-gray-900">₹{platform.revenue}</div>
+              </div>
+              
+              <div className="text-center">
+                <div className="flex items-center gap-1 text-sm text-gray-600">
+                  <TrendingUp className="w-4 h-4" />
+                  <span>Growth</span>
+                </div>
+                <div className={`font-semibold ${platform.growth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {platform.growth >= 0 ? '+' : ''}{platform.growth}%
+                </div>
+              </div>
             </div>
           </div>
         ))}

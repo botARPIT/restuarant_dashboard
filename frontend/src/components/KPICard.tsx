@@ -1,45 +1,38 @@
 import React from 'react';
-import { TrendingUp, TrendingDown } from 'lucide-react';
 import { KPI } from '../types';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 
 interface KPICardProps {
   kpi: KPI;
 }
 
 const KPICard: React.FC<KPICardProps> = ({ kpi }) => {
-  const Icon = kpi.icon;
-  
+  const isPositive = kpi.change >= 0;
+  const changeColor = isPositive ? 'positive' : 'negative';
+  const ChangeIcon = isPositive ? TrendingUp : TrendingDown;
+
   return (
-    <div className="card">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-600">{kpi.title}</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{kpi.value}</p>
+    <div className="kpi-card">
+      <div className="flex items-center justify-between mb-4">
+        <div className="p-2 bg-blue-50 rounded-lg">
+          <kpi.icon className="w-6 h-6 text-blue-600" />
         </div>
-        <div className={`p-3 rounded-lg ${
-          kpi.changeType === 'positive' ? 'bg-green-100' : 
-          kpi.changeType === 'negative' ? 'bg-red-100' : 'bg-gray-100'
-        }`}>
-          <Icon className={`w-6 h-6 ${
-            kpi.changeType === 'positive' ? 'text-green-600' : 
-            kpi.changeType === 'negative' ? 'text-red-600' : 'text-gray-600'
-          }`} />
+        <div className="text-right">
+          <span className={`kpi-change ${changeColor} flex items-center gap-1`}>
+            <ChangeIcon className="w-4 h-4" />
+            {Math.abs(kpi.change)}%
+          </span>
         </div>
       </div>
       
-      <div className="mt-4 flex items-center space-x-1">
-        {kpi.changeType === 'positive' ? (
-          <TrendingUp className="w-4 h-4 text-green-500" />
-        ) : kpi.changeType === 'negative' ? (
-          <TrendingDown className="w-4 h-4 text-red-500" />
-        ) : null}
-        <span className={`text-sm ${
-          kpi.changeType === 'positive' ? 'text-green-600' : 
-          kpi.changeType === 'negative' ? 'text-red-600' : 'text-gray-600'
-        }`}>
-          {kpi.change}
-        </span>
+      <div className="mb-2">
+        <div className="kpi-value">{kpi.value}</div>
+        <div className="kpi-label">{kpi.label}</div>
       </div>
+      
+      {kpi.description && (
+        <p className="text-sm text-gray-600">{kpi.description}</p>
+      )}
     </div>
   );
 };
