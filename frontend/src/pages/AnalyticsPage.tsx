@@ -28,10 +28,12 @@ export default function AnalyticsPage(){
             <p className="page-subtitle">Track your restaurant's performance and growth</p>
           </div>
           <div className="flex items-center gap-2">
+            <label htmlFor="timeRange" className="text-sm font-medium text-slate-700">Time Range:</label>
             <select 
+              id="timeRange"
               value={timeRange} 
               onChange={(e) => setTimeRange(e.target.value)}
-              className="input-clean w-32"
+              className="input-clean w-40 text-sm"
             >
               <option value="7">Last 7 days</option>
               <option value="30">Last 30 days</option>
@@ -125,16 +127,21 @@ export default function AnalyticsPage(){
           <div className="space-y-3">
             {trends.map((day: any, index: number) => (
               <div key={day.date || index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <span className="text-sm font-semibold text-blue-700">{day.date || `Day ${index + 1}`}</span>
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-sm font-semibold text-blue-700 truncate">
+                      {day.date ? new Date(day.date).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                      }) : `Day ${index + 1}`}
+                    </span>
                   </div>
-                  <div>
-                    <div className="font-medium text-slate-900">{day.orders || 0} orders</div>
-                    <div className="text-sm text-slate-500">₹{day.revenue || 0} revenue</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-slate-900 truncate">{day.orders || 0} orders</div>
+                    <div className="text-sm text-slate-500 truncate">₹{day.revenue || 0} revenue</div>
                   </div>
                 </div>
-                <div className="text-right">
+                <div className="text-right flex-shrink-0 ml-4">
                   <div className={`text-sm font-medium ${
                     (day.revenue || 0) > (trends[index - 1]?.revenue || 0) ? 'text-emerald-600' : 'text-rose-600'
                   }`}>
