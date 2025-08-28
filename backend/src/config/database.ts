@@ -10,7 +10,7 @@ interface DatabaseConfig {
   database: string;
   user: string;
   password: string;
-  ssl: boolean;
+  ssl: boolean | { rejectUnauthorized: boolean };
   max: number;
   idleTimeoutMillis: number;
   connectionTimeoutMillis: number;
@@ -44,11 +44,7 @@ export const getDatabasePool = (): Pool => {
       ...config,
       // Additional pool configuration
       min: parseInt(process.env.DB_MIN_CONNECTIONS || '2'),
-      acquire: parseInt(process.env.DB_ACQUIRE_TIMEOUT || '60000'),
-      createTimeoutMillis: parseInt(process.env.DB_CREATE_TIMEOUT || '3000'),
-      destroyTimeoutMillis: parseInt(process.env.DB_DESTROY_TIMEOUT || '5000'),
-      reapIntervalMillis: parseInt(process.env.DB_REAP_INTERVAL || '1000'),
-      createRetryIntervalMillis: parseInt(process.env.DB_CREATE_RETRY_INTERVAL || '200'),
+      // Only use valid PoolConfig properties
     };
 
     pool = new Pool(poolConfig);
