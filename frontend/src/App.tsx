@@ -10,6 +10,7 @@ import MenuPage from './pages/MenuPage';
 import CustomersPage from './pages/CustomersPage';
 import NotificationsPage from './pages/NotificationsPage';
 import SettingsPage from './pages/SettingsPage';
+import ProfilePage from './pages/ProfilePage';
 import Layout from './components/Layout';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             <Route path="customers" element={<CustomersPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="settings" element={<SettingsPage />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
           
           {/* Catch all route */}

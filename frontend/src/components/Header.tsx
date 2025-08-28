@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Filter, Bell, User, Settings, TrendingUp, Menu, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     window.location.href = '/login';
+  };
+
+  const handleProfileClick = () => {
+    setShowUserMenu(false);
+    navigate('/profile');
+  };
+
+  const handleSettingsClick = () => {
+    setShowUserMenu(false);
+    navigate('/settings');
   };
 
   const getRoleColor = (role: string) => {
@@ -19,6 +31,19 @@ export default function Header() {
     };
     return colors[role as keyof typeof colors] || 'bg-slate-100 text-slate-700';
   };
+
+  // Close user menu when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.user-menu-container')) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4">
@@ -54,7 +79,7 @@ export default function Header() {
             </button>
           </div>
           
-          <div className="relative">
+          <div className="relative user-menu-container">
             <button 
               onClick={() => setShowUserMenu(!showUserMenu)}
               className="flex items-center gap-3 p-2 hover:bg-slate-100 rounded-lg transition-colors duration-200"
@@ -79,11 +104,17 @@ export default function Header() {
                 </div>
                 
                 <div className="py-1">
-                  <button className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                  <button 
+                    onClick={handleProfileClick}
+                    className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors duration-200"
+                  >
                     <User className="w-4 h-4" />
                     Profile
                   </button>
-                  <button className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                  <button 
+                    onClick={handleSettingsClick}
+                    className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition-colors duration-200"
+                  >
                     <Settings className="w-4 h-4" />
                     Settings
                   </button>
@@ -92,7 +123,7 @@ export default function Header() {
                 <div className="border-t border-slate-200 pt-1">
                   <button 
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-rose-600 hover:bg-rose-50 flex items-center gap-2"
+                    className="w-full text-left px-4 py-2 text-sm text-rose-600 hover:bg-rose-50 flex items-center gap-2 transition-colors duration-200"
                   >
                     <LogOut className="w-4 h-4" />
                     Sign Out
