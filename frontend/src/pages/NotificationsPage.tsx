@@ -172,7 +172,7 @@ export default function NotificationsPage() {
             {unreadCount > 0 && (
               <button 
                 onClick={markAllAsRead}
-                className="btn-secondary flex items-center gap-2 hover:bg-slate-100 transition-colors duration-200 cursor-pointer"
+                className="btn-secondary flex items-center gap-2 hover:bg-slate-100 transition-colors duration-200"
               >
                 <CheckCircle className="w-4 h-4" />
                 Mark All Read
@@ -196,14 +196,14 @@ export default function NotificationsPage() {
               placeholder="Search notifications..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="input-clean pl-10 w-full cursor-text"
+              className="input-clean pl-10 w-full"
             />
           </div>
           
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="input-clean w-32 cursor-pointer"
+            className="input-clean w-32"
           >
             <option value="all">All Types</option>
             <option value="info">Info</option>
@@ -215,14 +215,14 @@ export default function NotificationsPage() {
           <select
             value={readFilter}
             onChange={(e) => setReadFilter(e.target.value)}
-            className="input-clean w-32 cursor-pointer"
+            className="input-clean w-32"
           >
             <option value="all">All Status</option>
             <option value="unread">Unread</option>
             <option value="read">Read</option>
           </select>
           
-          <button className="btn-secondary flex items-center gap-2 hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+          <button className="btn-secondary flex items-center gap-2 hover:bg-slate-100 transition-colors duration-200">
             <Filter className="w-4 h-4" />
             More Filters
           </button>
@@ -236,7 +236,7 @@ export default function NotificationsPage() {
             key={notification.id} 
             className={`card-minimal card-hover border-l-4 ${getNotificationColor(notification.type)} ${
               !notification.read ? 'ring-2 ring-slate-200' : ''
-            } transition-all duration-200 hover:shadow-md cursor-pointer`}
+            } transition-all duration-200 hover:shadow-md`}
           >
             <div className="flex items-start gap-4">
               {/* Notification Icon */}
@@ -259,7 +259,7 @@ export default function NotificationsPage() {
                           e.stopPropagation();
                           markAsRead(notification.id);
                         }}
-                        className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors duration-200 cursor-pointer"
+                        className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors duration-200"
                         title="Mark as read"
                       >
                         <Eye className="w-4 h-4" />
@@ -270,7 +270,7 @@ export default function NotificationsPage() {
                         e.stopPropagation();
                         deleteNotification(notification.id);
                       }}
-                      className="p-1 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors duration-200 cursor-pointer"
+                      className="p-1 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors duration-200"
                       title="Delete notification"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -339,7 +339,7 @@ export default function NotificationsPage() {
                 setTypeFilter('all');
                 setReadFilter('all');
               }}
-              className="btn-secondary mt-4 hover:bg-slate-100 transition-colors duration-200 cursor-pointer"
+              className="btn-secondary mt-4 hover:bg-slate-100 transition-colors duration-200"
             >
               Clear Filters
             </button>
@@ -360,7 +360,7 @@ export default function NotificationsPage() {
         <div className="empty-state">
           <XCircle className="empty-state-icon text-rose-500" />
           <p className="text-rose-600 mb-2">{error}</p>
-          <button className="btn-primary hover:bg-slate-700 transition-colors duration-200 cursor-pointer" onClick={() => window.location.reload()}>
+          <button className="btn-primary hover:bg-slate-700 transition-colors duration-200" onClick={() => window.location.reload()}>
             Try Again
           </button>
         </div>
