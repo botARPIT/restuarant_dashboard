@@ -258,7 +258,13 @@ const startServer = async () => {
       console.log(`📊 Health check: http://0.0.0.0:${PORT}/health`);
       console.log(`🌐 Environment: ${NODE_ENV}`);
       console.log(`🔌 Database: Connected`);
-      console.log(`📱 Platform Integrations: ${Object.keys(await platformManager.getHealthStatus()).length} active`);
+      
+      // Get platform health status
+      platformManager.getHealthStatus().then(platformHealth => {
+        console.log(`📱 Platform Integrations: ${Object.keys(platformHealth).length} active`);
+      }).catch(() => {
+        console.log(`📱 Platform Integrations: Initializing...`);
+      });
       
       if (NODE_ENV === 'production') {
         console.log(`🌍 Access from host: https://your-production-domain.com`);
@@ -272,4 +278,5 @@ const startServer = async () => {
   }
 };
 
+// Start the server
 startServer();
