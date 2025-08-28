@@ -11,7 +11,7 @@ const PlatformPerformance: React.FC<PlatformPerformanceProps> = ({ platforms }) 
   // Company logo mapping with proper colors
   const getCompanyLogo = (platformName: string) => {
     const logos: Record<string, { logo: string; bgColor: string; textColor: string }> = {
-      'Zomato': { logo: 'Z', bgColor: 'bg-orange-500', textColor: 'text-white' },
+      'Zomato': { logo: 'Z', bgColor: 'bg-red-500', textColor: 'text-white' },
       'Swiggy': { logo: 'S', bgColor: 'bg-orange-500', textColor: 'text-white' },
       'UberEats': { logo: 'U', bgColor: 'bg-black', textColor: 'text-white' },
       'Dunzo': { logo: 'D', bgColor: 'bg-purple-500', textColor: 'text-white' },
@@ -19,6 +19,11 @@ const PlatformPerformance: React.FC<PlatformPerformanceProps> = ({ platforms }) 
       'Blinkit': { logo: 'B', bgColor: 'bg-green-500', textColor: 'text-white' }
     };
     return logos[platformName] || { logo: platformName.charAt(0), bgColor: 'bg-slate-500', textColor: 'text-white' };
+  };
+
+  const handleViewAll = () => {
+    // Navigate to a platforms overview page or create a modal
+    window.location.href = '/analytics?tab=platforms';
   };
 
   const handleViewDetails = (platformName: string) => {
@@ -33,7 +38,10 @@ const PlatformPerformance: React.FC<PlatformPerformanceProps> = ({ platforms }) 
           <h2 className="text-xl font-semibold text-slate-900 mb-1">Platform Performance</h2>
           <p className="text-slate-600">Track performance across all delivery platforms</p>
         </div>
-        <button className="btn-primary text-sm px-4 py-2 flex items-center gap-2 hover:bg-slate-700 transition-colors duration-200">
+        <button 
+          onClick={handleViewAll}
+          className="btn-primary text-sm px-4 py-2 flex items-center gap-2 hover:bg-slate-700 transition-colors duration-200"
+        >
           <span>View All</span>
           <ExternalLink className="w-4 h-4" />
         </button>

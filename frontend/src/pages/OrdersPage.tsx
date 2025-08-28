@@ -27,7 +27,7 @@ export default function OrdersPage(){
   // Company logo mapping with proper colors
   const getCompanyLogo = (platformName: string) => {
     const logos: Record<string, { logo: string; bgColor: string; textColor: string }> = {
-      'Zomato': { logo: 'Z', bgColor: 'bg-orange-500', textColor: 'text-white' },
+      'Zomato': { logo: 'Z', bgColor: 'bg-red-500', textColor: 'text-white' },
       'Swiggy': { logo: 'S', bgColor: 'bg-orange-500', textColor: 'text-white' },
       'UberEats': { logo: 'U', bgColor: 'bg-black', textColor: 'text-white' },
       'Dunzo': { logo: 'D', bgColor: 'bg-purple-500', textColor: 'text-white' },

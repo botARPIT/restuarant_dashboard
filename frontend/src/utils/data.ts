@@ -260,7 +260,7 @@ export const notifications: NotificationItem[] = [
     message: 'Order #ORD006 has been placed via Zomato',
     type: 'info',
     read: false,
-    timestamp: '5 minutes ago'
+    timestamp: '2024-01-15T10:30:00Z'
   },
   {
     id: 'NOTIF002',
@@ -268,7 +268,7 @@ export const notifications: NotificationItem[] = [
     message: 'Order #ORD001 has been successfully delivered',
     type: 'success',
     read: false,
-    timestamp: '2 hours ago'
+    timestamp: '2024-01-15T09:15:00Z'
   },
   {
     id: 'NOTIF003',
@@ -276,7 +276,7 @@ export const notifications: NotificationItem[] = [
     message: 'Paneer stock is running low. Please reorder soon.',
     type: 'warning',
     read: true,
-    timestamp: '1 day ago'
+    timestamp: '2024-01-14T16:45:00Z'
   },
   {
     id: 'NOTIF004',
@@ -284,7 +284,7 @@ export const notifications: NotificationItem[] = [
     message: 'Payment for order #ORD005 has failed',
     type: 'error',
     read: false,
-    timestamp: '2 days ago'
+    timestamp: '2024-01-14T14:20:00Z'
   }
 ];
 
@@ -302,7 +302,7 @@ export const getStatusColor = (status: string): string => {
 
 export const getPlatformColor = (platform: string): string => {
   const platformColors: Record<string, string> = {
-    'Zomato': 'bg-orange-100 text-orange-700 border-orange-200',
+    'Zomato': 'bg-red-100 text-red-700 border-red-200',
     'Swiggy': 'bg-orange-100 text-orange-700 border-orange-200',
     'UberEats': 'bg-black text-white border-black',
     'Dunzo': 'bg-purple-100 text-purple-700 border-purple-200',

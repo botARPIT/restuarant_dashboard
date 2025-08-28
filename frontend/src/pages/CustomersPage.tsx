@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getJSON } from '../utils/api';
 import { Search, Filter, Plus, Edit, Trash2, Eye, User, Mail, Phone, ShoppingCart, DollarSign, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 interface Customer {
@@ -12,6 +11,60 @@ interface Customer {
   lastOrder: string;
   status: 'active' | 'inactive';
 }
+
+// Mock data for customers
+const mockCustomers: Customer[] = [
+  {
+    id: 'CUST001',
+    name: 'John Doe',
+    email: 'john@example.com',
+    phone: '+91 98765 43210',
+    totalOrders: 15,
+    totalSpent: 4500,
+    lastOrder: '2 days ago',
+    status: 'active'
+  },
+  {
+    id: 'CUST002',
+    name: 'Jane Smith',
+    email: 'jane@example.com',
+    phone: '+91 98765 43211',
+    totalOrders: 8,
+    totalSpent: 2800,
+    lastOrder: '1 week ago',
+    status: 'active'
+  },
+  {
+    id: 'CUST003',
+    name: 'Mike Johnson',
+    email: 'mike@example.com',
+    phone: '+91 98765 43212',
+    totalOrders: 22,
+    totalSpent: 7800,
+    lastOrder: '3 days ago',
+    status: 'active'
+  },
+  {
+    id: 'CUST004',
+    name: 'Sarah Wilson',
+    email: 'sarah@example.com',
+    phone: '+91 98765 43213',
+    totalOrders: 12,
+    totalSpent: 3600,
+    lastOrder: '5 days ago',
+    status: 'active'
+  },
+  {
+    id: 'CUST005',
+    name: 'David Brown',
+    email: 'david@example.com',
+    phone: '+91 98765 43214',
+    totalOrders: 18,
+    totalSpent: 5200,
+    lastOrder: '1 day ago',
+    status: 'inactive'
+  }
+];
 
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -31,38 +84,34 @@ export default function CustomersPage() {
   });
 
   useEffect(() => {
-    loadCustomers();
-  }, []);
-
-  const loadCustomers = async () => {
-    try {
-      setLoading(true);
-      const response = await getJSON<{ success: boolean; data: Customer[] }>('/customers');
-      setCustomers(response.data || []);
-    } catch (e: any) {
-      setError(e.message);
-    } finally {
+    // Simulate API call with mock data
+    setTimeout(() => {
+      setCustomers(mockCustomers);
       setLoading(false);
-    }
-  };
+    }, 1000);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (editingCustomer) {
-        await fetch(`/api/customers/${editingCustomer.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
+        // Update existing customer
+        setCustomers(prev => prev.map(c => 
+          c.id === editingCustomer.id 
+            ? { ...c, ...formData }
+            : c
+        ));
       } else {
-        await fetch('/api/customers', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
+        // Add new customer
+        const newCustomer: Customer = {
+          id: `CUST${String(customers.length + 1).padStart(3, '0')}`,
+          ...formData,
+          totalOrders: 0,
+          totalSpent: 0,
+          lastOrder: 'Never'
+        };
+        setCustomers(prev => [...prev, newCustomer]);
       }
-      await loadCustomers();
       setShowAddModal(false);
       setEditingCustomer(null);
       resetForm();
@@ -85,8 +134,7 @@ export default function CustomersPage() {
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
       try {
-        await fetch(`/api/customers/${id}`, { method: 'DELETE' });
-        await loadCustomers();
+        setCustomers(prev => prev.filter(c => c.id !== id));
       } catch (e: any) {
         setError(e.message);
       }

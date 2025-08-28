@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getJSON, sendJSON } from '../utils/api';
 import { Search, Filter, Bell, CheckCircle, AlertTriangle, Info, XCircle, Trash2, Clock, Eye, EyeOff } from 'lucide-react';
 
 interface NotificationItem {
@@ -11,6 +10,58 @@ interface NotificationItem {
   timestamp: string;
 }
 
+// Mock notifications data
+const mockNotifications: NotificationItem[] = [
+  {
+    id: 'NOTIF001',
+    title: 'New Order Received',
+    message: 'Order #ORD006 has been placed via Zomato',
+    type: 'info',
+    read: false,
+    timestamp: '2024-01-15T10:30:00Z'
+  },
+  {
+    id: 'NOTIF002',
+    title: 'Order Delivered',
+    message: 'Order #ORD001 has been successfully delivered',
+    type: 'success',
+    read: false,
+    timestamp: '2024-01-15T09:15:00Z'
+  },
+  {
+    id: 'NOTIF003',
+    title: 'Low Stock Alert',
+    message: 'Paneer stock is running low. Please reorder soon.',
+    type: 'warning',
+    read: true,
+    timestamp: '2024-01-14T16:45:00Z'
+  },
+  {
+    id: 'NOTIF004',
+    title: 'Payment Failed',
+    message: 'Payment for order #ORD005 has failed',
+    type: 'error',
+    read: false,
+    timestamp: '2024-01-14T14:20:00Z'
+  },
+  {
+    id: 'NOTIF005',
+    title: 'New Customer Registration',
+    message: 'A new customer has registered on your platform',
+    type: 'info',
+    read: false,
+    timestamp: '2024-01-15T08:45:00Z'
+  },
+  {
+    id: 'NOTIF006',
+    title: 'Revenue Milestone',
+    message: 'Congratulations! You\'ve reached ₹50,000 in monthly revenue',
+    type: 'success',
+    read: true,
+    timestamp: '2024-01-13T20:30:00Z'
+  }
+];
+
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,25 +71,18 @@ export default function NotificationsPage() {
   const [readFilter, setReadFilter] = useState('all');
 
   useEffect(() => {
-    loadNotifications();
-  }, []);
-
-  const loadNotifications = async () => {
-    try {
-      setLoading(true);
-      const response = await getJSON<{ success: boolean; data: NotificationItem[] }>('/notifications');
-      setNotifications(response.data || []);
-    } catch (e: any) {
-      setError(e.message);
-    } finally {
+    // Simulate API call with mock data
+    setTimeout(() => {
+      setNotifications(mockNotifications);
       setLoading(false);
-    }
-  };
+    }, 1000);
+  }, []);
 
   const markAsRead = async (id: string) => {
     try {
-      await sendJSON(`/notifications/${id}/read`, 'PATCH');
-      await loadNotifications();
+      setNotifications(prev => prev.map(n => 
+        n.id === id ? { ...n, read: true } : n
+      ));
     } catch (e: any) {
       setError(e.message);
     }
@@ -46,9 +90,7 @@ export default function NotificationsPage() {
 
   const markAllAsRead = async () => {
     try {
-      const unreadIds = notifications.filter(n => !n.read).map(n => n.id);
-      await Promise.all(unreadIds.map(id => sendJSON(`/notifications/${id}/read`, 'PATCH')));
-      await loadNotifications();
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     } catch (e: any) {
       setError(e.message);
     }
@@ -57,8 +99,7 @@ export default function NotificationsPage() {
   const deleteNotification = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this notification?')) {
       try {
-        await sendJSON(`/notifications/${id}`, 'DELETE');
-        await loadNotifications();
+        setNotifications(prev => prev.filter(n => n.id !== id));
       } catch (e: any) {
         setError(e.message);
       }
@@ -83,6 +124,26 @@ export default function NotificationsPage() {
       error: 'border-rose-200 bg-rose-50'
     };
     return colors[type as keyof typeof colors] || colors.info;
+  };
+
+  const formatTimeAgo = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInMinutes < 1) return 'Just now';
+    if (diffInMinutes < 60) return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+    if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    if (diffInDays < 7) return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+    
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+    });
   };
 
   const filteredNotifications = notifications.filter(notification => {
@@ -220,7 +281,16 @@ export default function NotificationsPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-sm text-slate-500">
                     <Clock className="w-4 h-4" />
-                    <span>{notification.timestamp}</span>
+                    <span className="font-medium">{formatTimeAgo(notification.timestamp)}</span>
+                    <span className="text-slate-400">•</span>
+                    <span className="text-slate-400">
+                      {new Date(notification.timestamp).toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </span>
                   </div>
                   
                   <div className="flex items-center gap-2">

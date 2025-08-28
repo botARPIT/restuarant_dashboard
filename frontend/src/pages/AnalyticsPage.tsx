@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { getJSON } from '../utils/api';
+import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, BarChart3, Calendar, DollarSign, Users, ShoppingCart } from 'lucide-react';
 
 export default function AnalyticsPage(){
@@ -8,15 +7,55 @@ export default function AnalyticsPage(){
   const [error, setError] = useState<string|undefined>();
   const [timeRange, setTimeRange] = useState('7');
 
-  React.useEffect(() => {
-    Promise.all([
-      getJSON(`/analytics/summary`),
-      getJSON(`/analytics/trends?days=${timeRange}`)
-    ]).then(([s, t]) => { 
-      setSummary(s.data ?? s); 
-      setTrends((t.data ?? t) as any[]); 
-    }).catch(e => setError(e.message));
+  useEffect(() => {
+    // Simulate API call with mock data
+    setTimeout(() => {
+      setSummary({
+        totalOrders: 1234,
+        totalRevenue: 45678,
+        avgOrderValue: 37,
+        completionRate: 94
+      });
+      
+      // Generate mock trend data
+      const mockTrends = [];
+      const days = parseInt(timeRange);
+      const today = new Date();
+      
+      for (let i = days - 1; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        
+        mockTrends.push({
+          date: date.toISOString(),
+          orders: Math.floor(Math.random() * 50) + 20,
+          revenue: Math.floor(Math.random() * 2000) + 800
+        });
+      }
+      
+      setTrends(mockTrends);
+    }, 1000);
   }, [timeRange]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric',
+      weekday: 'short'
+    });
+  };
+
+  const formatTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    if (diffInHours < 48) return 'Yesterday';
+    return formatDate(dateString);
+  };
 
   return (
     <div className="content-container">
@@ -27,7 +66,7 @@ export default function AnalyticsPage(){
             <h1 className="page-title">Analytics</h1>
             <p className="page-subtitle">Track your restaurant's performance and growth</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <label htmlFor="timeRange" className="text-sm font-medium text-slate-700">Time Range:</label>
             <select 
               id="timeRange"
@@ -56,7 +95,7 @@ export default function AnalyticsPage(){
                 +12%
               </span>
             </div>
-            <div className="kpi-value">{summary.totalOrders || 0}</div>
+            <div className="kpi-value">{summary.totalOrders.toLocaleString()}</div>
             <div className="kpi-label">Total Orders</div>
           </div>
 
@@ -70,7 +109,7 @@ export default function AnalyticsPage(){
                 +8%
               </span>
             </div>
-            <div className="kpi-value">₹{summary.totalRevenue || 0}</div>
+            <div className="kpi-value">₹{summary.totalRevenue.toLocaleString()}</div>
             <div className="kpi-label">Total Revenue</div>
           </div>
 
@@ -84,7 +123,7 @@ export default function AnalyticsPage(){
                 +5%
               </span>
             </div>
-            <div className="kpi-value">₹{summary.avgOrderValue || 0}</div>
+            <div className="kpi-value">₹{summary.avgOrderValue}</div>
             <div className="kpi-label">Avg Order Value</div>
           </div>
 
@@ -98,7 +137,7 @@ export default function AnalyticsPage(){
                 +15%
               </span>
             </div>
-            <div className="kpi-value">{summary.completionRate || 0}%</div>
+            <div className="kpi-value">{summary.completionRate}%</div>
             <div className="kpi-label">Completion Rate</div>
           </div>
         </div>
@@ -126,26 +165,27 @@ export default function AnalyticsPage(){
         {trends.length > 0 && (
           <div className="space-y-3">
             {trends.map((day: any, index: number) => (
-              <div key={day.date || index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200">
-                <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <span className="text-sm font-semibold text-blue-700 truncate">
-                      {day.date ? new Date(day.date).toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric' 
-                      }) : `Day ${index + 1}`}
-                    </span>
+              <div key={day.date || index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200 hover:bg-slate-100 transition-colors duration-200">
+                <div className="flex items-center gap-4 min-w-0 flex-1">
+                  <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="text-center">
+                      <div className="text-sm font-semibold text-blue-700">
+                        {formatDate(day.date)}
+                      </div>
+                    </div>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="font-medium text-slate-900 truncate">{day.orders || 0} orders</div>
-                    <div className="text-sm text-slate-500 truncate">₹{day.revenue || 0} revenue</div>
+                    <div className="font-medium text-slate-900 mb-1">{day.orders} orders</div>
+                    <div className="text-sm text-slate-500">₹{day.revenue.toLocaleString()} revenue</div>
                   </div>
                 </div>
                 <div className="text-right flex-shrink-0 ml-4">
                   <div className={`text-sm font-medium ${
-                    (day.revenue || 0) > (trends[index - 1]?.revenue || 0) ? 'text-emerald-600' : 'text-rose-600'
+                    index > 0 && (day.revenue || 0) > (trends[index - 1]?.revenue || 0) ? 'text-emerald-600' : 
+                    index > 0 && (day.revenue || 0) < (trends[index - 1]?.revenue || 0) ? 'text-rose-600' : 
+                    'text-slate-500'
                   }`}>
-                    {trends[index - 1] ? 
+                    {index > 0 ? 
                       ((day.revenue || 0) > (trends[index - 1]?.revenue || 0) ? '↗' : '↘') : 
                       '—'
                     }

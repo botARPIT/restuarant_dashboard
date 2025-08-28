@@ -11,7 +11,7 @@ const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
   // Company logo mapping with proper colors
   const getCompanyLogo = (platformName: string) => {
     const logos: Record<string, { logo: string; bgColor: string; textColor: string }> = {
-      'Zomato': { logo: 'Z', bgColor: 'bg-orange-500', textColor: 'text-white' },
+      'Zomato': { logo: 'Z', bgColor: 'bg-red-500', textColor: 'text-white' },
       'Swiggy': { logo: 'S', bgColor: 'bg-orange-500', textColor: 'text-white' },
       'UberEats': { logo: 'U', bgColor: 'bg-black', textColor: 'text-white' },
       'Dunzo': { logo: 'D', bgColor: 'bg-purple-500', textColor: 'text-white' },
@@ -101,7 +101,7 @@ const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
                     </div>
                   </td>
                   <td>
-                    <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all duration-200">
+                    <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200">
                       <Eye className="w-4 h-4" />
                     </button>
                   </td>
