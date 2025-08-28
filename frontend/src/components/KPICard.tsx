@@ -7,7 +7,7 @@ interface KPICardProps {
 }
 
 const KPICard: React.FC<KPICardProps> = ({ kpi }) => {
-  const isPositive = kpi.change >= 0;
+  const isPositive = kpi.changeType === 'positive';
   const changeColor = isPositive ? 'positive' : 'negative';
   const ChangeIcon = isPositive ? TrendingUp : TrendingDown;
 
@@ -20,19 +20,15 @@ const KPICard: React.FC<KPICardProps> = ({ kpi }) => {
         <div className="text-right">
           <span className={`kpi-change ${changeColor} flex items-center gap-1`}>
             <ChangeIcon className="w-4 h-4" />
-            {Math.abs(kpi.change)}%
+            {kpi.change}
           </span>
         </div>
       </div>
       
       <div className="mb-2">
         <div className="kpi-value">{kpi.value}</div>
-        <div className="kpi-label">{kpi.label}</div>
+        <div className="kpi-label">{kpi.title}</div>
       </div>
-      
-      {kpi.description && (
-        <p className="text-sm text-gray-600">{kpi.description}</p>
-      )}
     </div>
   );
 };

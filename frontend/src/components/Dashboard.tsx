@@ -2,7 +2,7 @@ import React from 'react';
 import KPICard from './KPICard';
 import RecentOrders from './RecentOrders';
 import PlatformPerformance from './PlatformPerformance';
-import { kpis, orders, platforms } from '../utils/data';
+import { kpis, recentOrders, platforms } from '../utils/data';
 
 const Dashboard: React.FC = () => {
   return (
@@ -16,7 +16,7 @@ const Dashboard: React.FC = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {kpis.map((kpi) => (
-          <KPICard key={kpi.label} kpi={kpi} />
+          <KPICard key={kpi.title} kpi={kpi} />
         ))}
       </div>
 
@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Recent Orders */}
         <div className="lg:col-span-1">
-          <RecentOrders orders={orders.slice(0, 5)} />
+          <RecentOrders orders={recentOrders.slice(0, 5)} />
         </div>
 
         {/* Platform Performance */}

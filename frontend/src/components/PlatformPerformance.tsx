@@ -17,16 +17,16 @@ const PlatformPerformance: React.FC<PlatformPerformanceProps> = ({ platforms }) 
       
       <div className="space-y-4">
         {platforms.map((platform) => (
-          <div key={platform.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-150">
+          <div key={platform.name} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-150">
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getPlatformColor(platform.name)}`}>
                 <span className="text-white font-semibold text-sm">
-                  {platform.name.charAt(0).toUpperCase()}
+                  {platform.icon}
                 </span>
               </div>
               <div>
                 <h3 className="font-medium text-gray-900">{platform.name}</h3>
-                <p className="text-sm text-gray-500">{platform.description}</p>
+                <p className="text-sm text-gray-500">{platform.status === 'active' ? 'Active' : 'Inactive'}</p>
               </div>
             </div>
             
@@ -36,7 +36,7 @@ const PlatformPerformance: React.FC<PlatformPerformanceProps> = ({ platforms }) 
                   <Users className="w-4 h-4" />
                   <span>Orders</span>
                 </div>
-                <div className="font-semibold text-gray-900">{platform.orderCount}</div>
+                <div className="font-semibold text-gray-900">{platform.orders}</div>
               </div>
               
               <div className="text-center">
@@ -52,8 +52,8 @@ const PlatformPerformance: React.FC<PlatformPerformanceProps> = ({ platforms }) 
                   <TrendingUp className="w-4 h-4" />
                   <span>Growth</span>
                 </div>
-                <div className={`font-semibold ${platform.growth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {platform.growth >= 0 ? '+' : ''}{platform.growth}%
+                <div className={`font-semibold ${platform.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {platform.change >= 0 ? '+' : ''}{platform.change}%
                 </div>
               </div>
             </div>
