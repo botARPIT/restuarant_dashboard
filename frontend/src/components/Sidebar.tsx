@@ -66,7 +66,7 @@ const Sidebar: React.FC = () => {
             <a
               key={item.name}
               href={item.href}
-              className={`nav-link-modern ${isActive ? 'active' : ''} ${isCollapsed ? 'justify-center' : ''}`}
+              className={`nav-link-modern group ${isActive ? 'active' : ''} ${isCollapsed ? 'justify-center' : ''}`}
             >
               <div className={`p-2 rounded-xl transition-all duration-300 ${
                 isActive 
@@ -114,7 +114,7 @@ const Sidebar: React.FC = () => {
           <span className="flex items-center gap-2 justify-center">
             <Sparkles className="w-4 h-4" />
             {!isCollapsed && <span>Quick Actions</span>}
-          </button>
+          </span>
         </button>
       </div>
     </div>
