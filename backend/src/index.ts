@@ -2,79 +2,274 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
+import compression from 'compression';
 import rateLimit from 'express-rate-limit';
+import slowDown from 'express-slow-down';
+import hpp from 'hpp';
+import dotenv from 'dotenv';
+
+// Import database and platform integration
+import { 
+  testDatabaseConnection, 
+  initializeDatabase, 
+  getDatabaseHealth,
+  closeDatabasePool 
+} from './config/database';
+import PlatformIntegrationManager from './services/platformIntegration';
 
 // Import routes
-import orderRoutes from './routes/orderRoutes';
-import platformRoutes from './routes/platformRoutes';
-import dashboardRoutes from './routes/dashboardRoutes';
-import customersRoutes from './routes/customersRoutes';
-import menuRoutes from './routes/menuRoutes';
-import notificationsRoutes from './routes/notificationsRoutes';
-import analyticsRoutes from './routes/analyticsRoutes';
+import dashboardRoutes from './routes/dashboard';
+import ordersRoutes from './routes/orders';
+import analyticsRoutes from './routes/analytics';
+import menuRoutes from './routes/menu';
+import customersRoutes from './routes/customers';
+import notificationsRoutes from './routes/notifications';
+import platformRoutes from './routes/platforms';
+import healthRoutes from './routes/health';
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
-const PORT = parseInt(process.env.PORT || '5000', 10);
-const HOST = process.env.HOST || '0.0.0.0';
+const PORT = process.env.PORT || 5000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
+
+// Initialize platform integration manager
+const platformManager = new PlatformIntegrationManager();
+
+// Enhanced security middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'", "https:"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
+
+// CORS configuration
+const corsOptions = {
+  origin: NODE_ENV === 'production' 
+    ? process.env.CORS_ORIGIN?.split(',') || ['https://your-frontend-domain.com']
+    : ['http://localhost:3000', 'http://localhost:3001'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'), // limit each IP to 100 requests per windowMs
+  message: {
+    error: 'Too many requests from this IP, please try again later.',
+    retryAfter: Math.ceil(parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000') / 1000)
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 
-// Middleware
-app.use(helmet());
-app.use(cors());
-app.use(morgan('combined'));
-app.use(limiter);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Slow down requests after hitting rate limit
+const speedLimiter = slowDown({
+  windowMs: parseInt(process.env.SLOW_DOWN_WINDOW_MS || '900000'), // 15 minutes
+  delayAfter: parseInt(process.env.SLOW_DOWN_DELAY_AFTER || '50'), // allow 50 requests per 15 minutes, then...
+  delayMs: (hits: number) => Math.min(hits * 100, parseInt(process.env.SLOW_DOWN_MAX_DELAY_MS || '2000')) // begin adding 100ms of delay per request above 50
+});
 
-// Routes
-app.use('/api/orders', orderRoutes);
-app.use('/api/platforms', platformRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/customers', customersRoutes);
-app.use('/api/menu', menuRoutes);
-app.use('/api/notifications', notificationsRoutes);
-app.use('/api/analytics', analyticsRoutes);
+// Apply rate limiting and slow down
+app.use('/api/', limiter);
+app.use('/api/', speedLimiter);
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Security middleware
+app.use(hpp()); // Protect against HTTP Parameter Pollution attacks
+app.use(compression()); // Enable gzip compression
+
+// Logging middleware
+if (NODE_ENV === 'production') {
+  // Production logging
+  app.use(morgan('combined', {
+    skip: (req, res) => res.statusCode < 400,
+    stream: {
+      write: (message: string) => {
+        console.log(message.trim());
+      }
+    }
+  }));
+} else {
+  // Development logging
+  app.use(morgan('dev'));
+}
 
 // Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK', 
-    message: 'Restaurant Dashboard API is running',
-    timestamp: new Date().toISOString()
-  });
+app.get('/health', async (req, res) => {
+  try {
+    const dbHealth = await getDatabaseHealth();
+    const platformHealth = await platformManager.getHealthStatus();
+    
+    res.json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: NODE_ENV,
+      database: dbHealth,
+      platforms: platformHealth,
+      version: process.env.npm_package_version || '1.0.0'
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
+// API routes
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/orders', ordersRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/menu', menuRoutes);
+app.use('/api/customers', customersRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/platforms', platformRoutes);
+app.use('/api/health', healthRoutes);
+
+// Platform webhook endpoints
+app.post('/webhooks/zomato', async (req, res) => {
+  try {
+    const signature = req.headers['x-zomato-signature'] as string;
+    if (!signature) {
+      return res.status(401).json({ error: 'Missing signature' });
+    }
+
+    const result = await platformManager.handleZomatoWebhook(req.body, signature);
+    if (result.success) {
+      res.json(result);
+    } else {
+      res.status(400).json(result);
+    }
+  } catch (error) {
+    console.error('Zomato webhook error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/webhooks/swiggy', async (req, res) => {
+  try {
+    const signature = req.headers['x-swiggy-signature'] as string;
+    if (!signature) {
+      return res.status(401).json({ error: 'Missing signature' });
+    }
+
+    const result = await platformManager.handleSwiggyWebhook(req.body, signature);
+    if (result.success) {
+      res.json(result);
+    } else {
+      res.status(400).json(result);
+    }
+  } catch (error) {
+    console.error('Swiggy webhook error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({ 
+  res.status(404).json({
     error: 'Route not found',
-    path: req.originalUrl
+    path: req.originalUrl,
+    method: req.method,
+    timestamp: new Date().toISOString()
   });
 });
 
-// Error handling middleware
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ 
-    error: 'Something went wrong!',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
-  });
+// Global error handler
+app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('Global error handler:', error);
+  
+  const statusCode = error.statusCode || 500;
+  const message = error.message || 'Internal Server Error';
+  
+  // Don't leak error details in production
+  const errorResponse = NODE_ENV === 'production' 
+    ? { error: 'Internal Server Error' }
+    : { error: message, stack: error.stack };
+  
+  res.status(statusCode).json(errorResponse);
 });
 
-// Start server
-app.listen(PORT, HOST, () => {
-  console.log(`🚀 Restaurant Dashboard API server running on http://${HOST}:${PORT}`);
-  console.log(`📊 Health check: http://${HOST}:${PORT}/health`);
-  console.log(`🌐 Access from host: http://localhost:${PORT}`);
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+  console.log('SIGTERM received, shutting down gracefully...');
+  await closeDatabasePool();
+  process.exit(0);
 });
 
-export default app;
+process.on('SIGINT', async () => {
+  console.log('SIGINT received, shutting down gracefully...');
+  await closeDatabasePool();
+  process.exit(0);
+});
+
+// Unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
+// Uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
+// Initialize database and start server
+const startServer = async () => {
+  try {
+    // Test database connection
+    const dbConnected = await testDatabaseConnection();
+    if (!dbConnected) {
+      throw new Error('Failed to connect to database');
+    }
+
+    // Initialize database tables
+    await initializeDatabase();
+    console.log('✅ Database initialized successfully');
+
+    // Start server
+    app.listen(PORT, () => {
+      console.log(`🚀 Restaurant Dashboard API server running on http://0.0.0.0:${PORT}`);
+      console.log(`📊 Health check: http://0.0.0.0:${PORT}/health`);
+      console.log(`🌐 Environment: ${NODE_ENV}`);
+      console.log(`🔌 Database: Connected`);
+      console.log(`📱 Platform Integrations: ${Object.keys(await platformManager.getHealthStatus()).length} active`);
+      
+      if (NODE_ENV === 'production') {
+        console.log(`🌍 Access from host: https://your-production-domain.com`);
+      } else {
+        console.log(`🌍 Access from host: http://localhost:${PORT}`);
+      }
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();

@@ -1,189 +1,339 @@
-# RestaurantHub - Unified Restaurant Dashboard
+# Restaurant Dashboard
 
-A comprehensive restaurant management dashboard that aggregates orders from multiple delivery platforms (Zomato, Swiggy, UberEats, Dunzo) into a single, unified interface.
+A comprehensive restaurant management system with real-time order tracking, analytics, and platform integrations for Swiggy and Zomato.
 
-## 🚀 Features
+## Features
 
-- **Multi-Platform Integration**: Manage orders from Zomato, Swiggy, UberEats, and Dunzo
-- **Real-time Dashboard**: Live order tracking and status updates
-- **Performance Analytics**: Platform-wise performance metrics and trends
-- **Order Management**: Complete order lifecycle management
-- **Responsive Design**: Modern, mobile-friendly interface
-- **RESTful API**: Scalable backend architecture
+- 🍽️ **Real-time Dashboard** - Live order tracking and business metrics
+- 📊 **Advanced Analytics** - Revenue trends, customer insights, and performance metrics
+- 🛍️ **Order Management** - Complete order lifecycle management
+- 👥 **Customer Management** - Customer database with order history
+- 🍕 **Menu Management** - Dynamic menu with categories and pricing
+- 🔔 **Smart Notifications** - Real-time alerts and updates
+- 🔌 **Platform Integrations** - Swiggy and Zomato API integration
+- 🔐 **Authentication & Security** - Role-based access control
+- 📱 **Responsive Design** - Mobile-first, modern UI/UX
+- 🚀 **Production Ready** - Docker, monitoring, and scaling support
 
-## 🏗️ Project Structure
-
-```
-├── frontend/                 # React + TypeScript frontend
-│   ├── src/
-│   │   ├── components/      # React components
-│   │   ├── types/          # TypeScript type definitions
-│   │   ├── utils/          # Utility functions and data
-│   │   ├── App.tsx         # Main application component
-│   │   └── main.tsx        # Application entry point
-│   ├── package.json        # Frontend dependencies
-│   └── tailwind.config.js  # Tailwind CSS configuration
-├── backend/                 # Node.js + Express backend
-│   ├── src/
-│   │   ├── controllers/    # API controllers
-│   │   ├── routes/         # API routes
-│   │   ├── types/          # TypeScript type definitions
-│   │   └── index.ts        # Server entry point
-│   ├── package.json        # Backend dependencies
-│   └── tsconfig.json       # TypeScript configuration
-├── shared/                  # Shared types and utilities
-└── package.json            # Root package.json with workspaces
-```
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
-- **React 18** with TypeScript
-- **Tailwind CSS** for styling
-- **Vite** for build tooling
-- **Lucide React** for icons
-- **React Router** for navigation
+- React 18 + TypeScript
+- Tailwind CSS for styling
+- React Router for navigation
+- Lucide React for icons
+- Page caching system
 
 ### Backend
-- **Node.js** with TypeScript
-- **Express.js** framework
-- **RESTful API** architecture
-- **Rate limiting** and security middleware
-- **Mock data** (ready for database integration)
+- Node.js + Express.js + TypeScript
+- PostgreSQL database
+- Redis caching
+- JWT authentication
+- Rate limiting and security
+- Platform API integrations
 
-## 📦 Installation
+### Infrastructure
+- Docker & Docker Compose
+- Nginx reverse proxy
+- Prometheus + Grafana monitoring
+- Health checks and auto-scaling
+
+## Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
-- npm 9+
+- Node.js 18+ and npm
+- Docker and Docker Compose
+- PostgreSQL (for local development)
+- Git
 
-### Quick Start
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-org/restaurant-dashboard.git
+cd restaurant-dashboard
+```
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd restaurant-dashboard
-   ```
+### 2. Environment Setup
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Setup environment variables**
-   ```bash
-   cp frontend/.env.example frontend/.env
-   cp backend/.env.example backend/.env
-   ```
-
-4. **Start development servers**
-   ```bash
-   npm run dev
-   ```
-
-This will start both frontend (port 3000) and backend (port 5000) in development mode.
-
-## 🚀 Available Scripts
-
-### Root Level
-- `npm run dev` - Start both frontend and backend in development mode
-- `npm run build` - Build both frontend and backend
-- `npm run test` - Run tests for both frontend and backend
-
-### Frontend
-- `npm run frontend:dev` - Start frontend development server
-- `npm run frontend:build` - Build frontend for production
-- `npm run frontend:preview` - Preview production build
-
-### Backend
-- `npm run backend:dev` - Start backend development server
-- `npm run backend:build` - Build backend for production
-- `npm run backend:start` - Start production backend server
-
-## 🌐 API Endpoints
-
-### Dashboard
-- `GET /api/dashboard/stats` - Get dashboard overview statistics
-- `GET /api/dashboard/trends` - Get daily trends data
-
-### Orders
-- `GET /api/orders` - Get all orders with pagination
-- `GET /api/orders/:id` - Get order by ID
-- `POST /api/orders` - Create new order
-- `PATCH /api/orders/:id/status` - Update order status
-- `GET /api/orders/platform/:platform` - Get orders by platform
-- `GET /api/orders/status/:status` - Get orders by status
-
-### Platforms
-- `GET /api/platforms` - Get all platforms
-- `GET /api/platforms/:id` - Get platform by ID
-- `PATCH /api/platforms/:id/status` - Update platform status
-- `GET /api/platforms/:id/stats` - Get platform statistics
-
-## 🎨 UI Components
-
-The dashboard includes:
-
-- **Sidebar Navigation**: Dashboard, Orders, Analytics, Menu Management, Customers, Notifications, Settings
-- **Header**: Search, Filter, and Notification controls
-- **KPI Cards**: Total Orders, Revenue, Active Orders, Completion Rate
-- **Recent Orders**: Live order tracking with status indicators
-- **Platform Performance**: Platform-wise metrics and status
-
-## 🔧 Development
-
-### Frontend Development
+#### Frontend Environment
 ```bash
 cd frontend
-npm run dev
+cp .env.example .env.local
 ```
 
-The frontend will be available at `http://localhost:3000`
+Update `.env.local`:
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+```
 
-### Backend Development
+#### Backend Environment
 ```bash
 cd backend
+cp .env.example .env
+```
+
+Update `.env` with your configuration:
+```env
+NODE_ENV=development
+PORT=5000
+
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=restaurant_dashboard
+DB_USER=postgres
+DB_PASSWORD=your_password
+
+# JWT
+JWT_SECRET=your-super-secure-jwt-secret-key-here
+
+# Platform API Keys
+ZOMATO_API_KEY=your-zomato-api-key
+ZOMATO_API_SECRET=your-zomato-api-secret
+SWIGGY_API_KEY=your-swiggy-api-key
+SWIGGY_API_SECRET=your-swiggy-api-secret
+```
+
+### 3. Install Dependencies
+```bash
+# Install workspace dependencies
+npm install
+
+# Install frontend dependencies
+cd frontend && npm install
+
+# Install backend dependencies
+cd ../backend && npm install
+```
+
+### 4. Database Setup
+
+#### Option A: Local PostgreSQL
+```bash
+# Create database
+createdb restaurant_dashboard
+
+# Run migrations
+cd backend
+npm run migrate
+```
+
+#### Option B: Docker PostgreSQL
+```bash
+docker run --name restaurant-postgres \
+  -e POSTGRES_DB=restaurant_dashboard \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=your_password \
+  -p 5432:5432 \
+  -d postgres:15-alpine
+```
+
+### 5. Start Development Servers
+```bash
+# Start both frontend and backend
 npm run dev
+
+# Or start individually
+npm run frontend:dev
+npm run backend:dev
 ```
 
-The backend API will be available at `http://localhost:5000`
+Access the application:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
+- Health Check: http://localhost:5000/health
 
-### API Testing
-Test the backend API using the health check endpoint:
+## Production Deployment
+
+### 1. Environment Configuration
 ```bash
-curl http://localhost:5000/health
+cp backend/.env.production backend/.env
 ```
 
-## 🚀 Deployment
+Update production environment variables:
+```env
+NODE_ENV=production
+DB_HOST=your-production-db-host
+DB_PASSWORD=your-secure-production-password
+JWT_SECRET=your-production-jwt-secret
+ZOMATO_API_KEY=your-production-zomato-key
+SWIGGY_API_KEY=your-production-swiggy-key
+# ... other production settings
+```
 
-### Frontend Deployment
+### 2. Docker Deployment
 ```bash
+# Build and start all services
+docker-compose -f docker-compose.prod.yml up -d
+
+# View logs
+docker-compose -f docker-compose.prod.yml logs -f
+
+# Stop services
+docker-compose -f docker-compose.prod.yml down
+```
+
+### 3. Manual Deployment
+```bash
+# Build frontend
 cd frontend
 npm run build
-```
 
-The built files will be in the `dist/` directory, ready for deployment to any static hosting service.
-
-### Backend Deployment
-```bash
-cd backend
+# Build backend
+cd ../backend
 npm run build
+
+# Start production server
 npm start
 ```
 
-The backend can be deployed to any Node.js hosting platform.
+## Platform API Integration
 
-## 🔮 Future Enhancements
+### Zomato Integration
+1. Get API credentials from [Zomato Developers](https://developers.zomato.com/)
+2. Add to environment variables:
+   ```env
+   ZOMATO_API_KEY=your-api-key
+   ZOMATO_API_SECRET=your-api-secret
+   ```
+3. Configure webhook URL in Zomato dashboard
+4. Update webhook secret in environment
 
-- **Database Integration**: MongoDB/PostgreSQL integration
-- **Real-time Updates**: WebSocket implementation for live order updates
-- **Authentication**: JWT-based user authentication
-- **Push Notifications**: Browser and mobile push notifications
-- **Advanced Analytics**: Detailed reporting and insights
-- **Mobile App**: React Native mobile application
-- **Multi-tenant Support**: Support for multiple restaurants
+### Swiggy Integration
+1. Contact Swiggy for API access
+2. Add to environment variables:
+   ```env
+   SWIGGY_API_KEY=your-api-key
+   SWIGGY_API_SECRET=your-api-secret
+   ```
+3. Configure webhook endpoints
+4. Test integration endpoints
 
-## 🤝 Contributing
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/logout` - User logout
+
+### Dashboard
+- `GET /api/dashboard/stats` - Dashboard statistics
+- `GET /api/dashboard/trends` - Revenue trends
+
+### Orders
+- `GET /api/orders` - List all orders
+- `POST /api/orders` - Create new order
+- `PUT /api/orders/:id` - Update order
+- `DELETE /api/orders/:id` - Delete order
+
+### Platform Integrations
+- `GET /api/platforms` - List platforms
+- `GET /api/platforms/:id/stats` - Platform statistics
+- `POST /webhooks/zomato` - Zomato webhook
+- `POST /webhooks/swiggy` - Swiggy webhook
+
+## Monitoring & Health Checks
+
+### Health Endpoints
+- `/health` - Overall system health
+- `/api/health` - API health status
+
+### Metrics
+- Prometheus metrics available at `/metrics`
+- Grafana dashboards for visualization
+- Custom business metrics tracking
+
+### Logging
+- Structured logging with Morgan
+- Log rotation and archiving
+- Error tracking and alerting
+
+## Security Features
+
+- JWT-based authentication
+- Role-based access control
+- Input sanitization and validation
+- SQL injection prevention
+- XSS protection
+- CSRF protection
+- Rate limiting
+- Request throttling
+- Secure headers with Helmet
+
+## Development
+
+### Code Quality
+```bash
+# Lint code
+npm run lint
+
+# Run tests
+npm test
+
+# Type checking
+npx tsc --noEmit
+```
+
+### Database Migrations
+```bash
+cd backend
+npm run migrate
+npm run seed
+```
+
+### API Documentation
+- OpenAPI/Swagger documentation available at `/api-docs`
+- Postman collection included
+- Example requests in `/examples`
+
+## Troubleshooting
+
+### Common Issues
+
+#### Database Connection Failed
+```bash
+# Check database status
+docker ps | grep postgres
+
+# Test connection
+cd backend
+npm run health
+```
+
+#### Frontend Build Issues
+```bash
+# Clear cache
+rm -rf node_modules package-lock.json
+npm install
+
+# Check TypeScript errors
+npx tsc --noEmit
+```
+
+#### Platform Integration Issues
+```bash
+# Check API keys
+echo $ZOMATO_API_KEY
+echo $SWIGGY_API_KEY
+
+# Test webhook endpoints
+curl -X POST http://localhost:5000/webhooks/zomato \
+  -H "Content-Type: application/json" \
+  -d '{"test": "data"}'
+```
+
+### Logs
+```bash
+# Backend logs
+docker-compose logs backend
+
+# Frontend logs
+docker-compose logs frontend
+
+# Database logs
+docker-compose logs postgres
+```
+
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -191,17 +341,25 @@ The backend can be deployed to any Node.js hosting platform.
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License.
+MIT License - see [LICENSE](LICENSE) file for details
 
-## 🆘 Support
+## Support
 
-For support and questions:
-- Check the documentation
-- Open an issue on GitHub
-- Contact the development team
+- Documentation: [Wiki](https://github.com/your-org/restaurant-dashboard/wiki)
+- Issues: [GitHub Issues](https://github.com/your-org/restaurant-dashboard/issues)
+- Discussions: [GitHub Discussions](https://github.com/your-org/restaurant-dashboard/discussions)
 
----
+## Roadmap
 
-**RestaurantHub** - Simplifying restaurant management across multiple delivery platforms 🍕🍔🍜
+- [ ] Mobile app (React Native)
+- [ ] Advanced analytics dashboard
+- [ ] Multi-location support
+- [ ] Inventory management
+- [ ] Staff scheduling
+- [ ] Customer loyalty program
+- [ ] Payment gateway integration
+- [ ] SMS notifications
+- [ ] AI-powered insights
+- [ ] Multi-language support
