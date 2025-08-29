@@ -1,4 +1,4 @@
-import { Pool, PoolConfig } from 'pg';
+import { Pool, PoolConfig, PoolClient } from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -50,15 +50,15 @@ export const getDatabasePool = (): Pool => {
     pool = new Pool(poolConfig);
 
     // Pool event handlers
-    pool.on('connect', (client) => {
+    pool.on('connect', (client: PoolClient) => {
       console.log('🔌 New client connected to database');
     });
 
-    pool.on('error', (err, client) => {
+    pool.on('error', (err: Error, client: PoolClient) => {
       console.error('❌ Unexpected error on idle client', err);
     });
 
-    pool.on('remove', (client) => {
+    pool.on('remove', (client: PoolClient) => {
       console.log('🔌 Client removed from pool');
     });
   }
