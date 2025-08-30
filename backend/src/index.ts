@@ -13,7 +13,8 @@ import {
   testDatabaseConnection, 
   initializeDatabase, 
   getDatabaseHealth,
-  closeDatabasePool 
+  closeDatabasePool,
+  insertSampleData
 } from './config/database';
 import PlatformIntegrationManager from './services/platformIntegration';
 
@@ -274,6 +275,16 @@ const startServer = async () => {
       try {
         await initializeDatabase();
         console.log('✅ Database initialized successfully');
+        
+        // Insert sample data for development
+        if (NODE_ENV === 'development') {
+          try {
+            await insertSampleData();
+            console.log('✅ Sample data inserted successfully');
+          } catch (error) {
+            console.log('⚠️ Sample data insertion failed:', error.message);
+          }
+        }
         
         // Initialize platform integrations AFTER database tables are created
         try {

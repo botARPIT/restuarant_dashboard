@@ -251,11 +251,119 @@ export const initializeDatabase = async (): Promise<void> => {
   }
 };
 
+// Insert sample data for development
+export const insertSampleData = async (): Promise<void> => {
+  const pool = getDatabasePool();
+  
+  // Check if sample data already exists
+  const existingOrders = await pool.query('SELECT COUNT(*) FROM orders');
+  if (parseInt(existingOrders.rows[0].count) > 0) {
+    console.log('📊 Sample data already exists, skipping insertion');
+    return;
+  }
+
+  const sampleOrders = [
+    {
+      order_id: 'ORD001',
+      customer_name: 'John Doe',
+      customer_email: 'john@example.com',
+      customer_phone: '+91-9876543210',
+      items: JSON.stringify([
+        { name: 'Butter Chicken', quantity: 1, price: 280, category: 'Main Course' },
+        { name: 'Naan', quantity: 2, price: 85, category: 'Bread' }
+      ]),
+      total_price: 450,
+      status: 'delivered',
+      platform: 'Zomato',
+      platform_order_id: 'ZOM123456'
+    },
+    {
+      order_id: 'ORD002',
+      customer_name: 'Jane Smith',
+      customer_email: 'jane@example.com',
+      customer_phone: '+91-9876543211',
+      items: JSON.stringify([
+        { name: 'Biryani', quantity: 1, price: 320, category: 'Main Course' },
+        { name: 'Raita', quantity: 1, price: 60, category: 'Side Dish' }
+      ]),
+      total_price: 380,
+      status: 'preparing',
+      platform: 'Swiggy',
+      platform_order_id: 'SWG789012'
+    },
+    {
+      order_id: 'ORD003',
+      customer_name: 'Mike Johnson',
+      customer_email: 'mike@example.com',
+      customer_phone: '+91-9876543212',
+      items: JSON.stringify([
+        { name: 'Tandoori Chicken', quantity: 1, price: 420, category: 'Main Course' },
+        { name: 'Dal', quantity: 1, price: 100, category: 'Side Dish' }
+      ]),
+      total_price: 520,
+      status: 'ready',
+      platform: 'UberEats',
+      platform_order_id: 'UBER345678'
+    },
+    {
+      order_id: 'ORD004',
+      customer_name: 'Sarah Wilson',
+      customer_email: 'sarah@example.com',
+      customer_phone: '+91-9876543213',
+      items: JSON.stringify([
+        { name: 'Paneer Tikka', quantity: 1, price: 280, category: 'Main Course' },
+        { name: 'Rice', quantity: 1, price: 40, category: 'Rice' }
+      ]),
+      total_price: 320,
+      status: 'pending',
+      platform: 'Zomato',
+      platform_order_id: 'ZOM901234'
+    },
+    {
+      order_id: 'ORD005',
+      customer_name: 'David Brown',
+      customer_email: 'david@example.com',
+      customer_phone: '+91-9876543214',
+      items: JSON.stringify([
+        { name: 'Chicken Curry', quantity: 1, price: 320, category: 'Main Course' },
+        { name: 'Roti', quantity: 2, price: 45, category: 'Bread' }
+      ]),
+      total_price: 410,
+      status: 'cancelled',
+      platform: 'Swiggy',
+      platform_order_id: 'SWG567890'
+    }
+  ];
+
+  try {
+    for (const order of sampleOrders) {
+      await pool.query(`
+        INSERT INTO orders (order_id, customer_name, customer_email, customer_phone, items, total_price, status, platform, platform_order_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      `, [
+        order.order_id,
+        order.customer_name,
+        order.customer_email,
+        order.customer_phone,
+        order.items,
+        order.total_price,
+        order.status,
+        order.platform,
+        order.platform_order_id
+      ]);
+    }
+    console.log('✅ Sample orders data inserted successfully');
+  } catch (error) {
+    console.error('❌ Failed to insert sample orders data:', error);
+  }
+};
+
 export default {
   getDatabasePool,
   testDatabaseConnection,
   closeDatabasePool,
   getDatabaseHealth,
   runMigration,
-  initializeDatabase
+  initializeDatabase,
+  insertSampleData
 };
