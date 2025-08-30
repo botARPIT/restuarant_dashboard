@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Search, Filter, Plus, Eye, Edit, Trash2 } from 'lucide-react';
 import { getJSON } from '../utils/api';
-import { Search, Filter, Plus, Eye, MoreHorizontal, Clock, Package, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import { getStatusIcon } from '../utils/data';
+import { Order, getStatusColor, getStatusIcon } from '../utils/data';
 
-type Order = { id: string; customer: string; status: string; totalPrice?: number; price?: number; platform?: string; time?: string; };
-
-export default function OrdersPage(){
+const OrdersPage: React.FC = () => {
   const [data, setData] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string|undefined>();
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  React.useEffect(() => {
+  useEffect(() => {
+    setLoading(true);
     getJSON<{success:boolean; data: Order[]; pagination?: any}>(`/orders`)
-      .then(r => setData(r.data))
-      .catch(e => setError(e.message))
+      .then(r => setData(r.data || []))
+      .catch(e => {
+        setError(e.message);
+        setData([]); // Ensure data is always an array
+      })
       .finally(() => setLoading(false));
   }, []);
 
-  const filteredOrders = data.filter(order => 
+  const filteredOrders = (data || []).filter(order => 
     order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
     order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
     order.platform?.toLowerCase().includes(searchQuery.toLowerCase())
