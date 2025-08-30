@@ -34,7 +34,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// Initialize platform integration manager
+// Initialize platform integration manager (but don't initialize integrations yet)
 const platformManager = new PlatformIntegrationManager();
 
 // Enhanced security middleware
@@ -274,6 +274,14 @@ const startServer = async () => {
       try {
         await initializeDatabase();
         console.log('✅ Database initialized successfully');
+        
+        // Initialize platform integrations AFTER database tables are created
+        try {
+          await platformManager.initializeIntegrations();
+          console.log('✅ Platform integrations initialized successfully');
+        } catch (error) {
+          console.log('⚠️ Platform integrations initialization failed:', error.message);
+        }
       } catch (error) {
         console.log('⚠️ Database initialization failed, continuing with existing tables');
       }
