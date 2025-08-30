@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { PageCacheProvider } from './contexts/PageCacheContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
+import OnboardingPage from './pages/OnboardingPage';
 import Dashboard from './components/Dashboard';
 import OrdersPage from './pages/OrdersPage';
 import AnalyticsPage from './pages/AnalyticsPage';
@@ -24,6 +25,7 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/onboarding" element={<OnboardingPage />} />
             
             {/* Protected Routes */}
             <Route path="/" element={

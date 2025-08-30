@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Search, Filter, Plus, Eye, Edit, Trash2, MoreHorizontal } from 'lucide-react';
+import { Search, Filter, Plus, Eye, Edit, Trash2, MoreHorizontal, FileText } from 'lucide-react';
 import { getJSON } from '../utils/api';
 import { Order, getStatusColor, getStatusIcon } from '../utils/data';
+import InvoiceGenerator from '../components/InvoiceGenerator';
 
 const OrdersPage: React.FC = () => {
   const [data, setData] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [showInvoice, setShowInvoice] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -25,6 +28,16 @@ const OrdersPage: React.FC = () => {
     order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
     order.platform?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleGenerateInvoice = (order: Order) => {
+    setSelectedOrder(order);
+    setShowInvoice(true);
+  };
+
+  const closeInvoice = () => {
+    setShowInvoice(false);
+    setSelectedOrder(null);
+  };
 
   // Company logo mapping with proper colors
   const getCompanyLogo = (platformName: string) => {
@@ -159,6 +172,13 @@ const OrdersPage: React.FC = () => {
                       </td>
                       <td>
                         <div className="flex items-center gap-1">
+                          <button 
+                            onClick={() => handleGenerateInvoice(order)}
+                            className="p-2 text-blue-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                            title="Generate Invoice"
+                          >
+                            <FileText className="w-4 h-4" />
+                          </button>
                           <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200">
                             <Eye className="w-4 h-4" />
                           </button>
@@ -182,8 +202,17 @@ const OrdersPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Invoice Generator Modal */}
+      {selectedOrder && (
+        <InvoiceGenerator
+          order={selectedOrder}
+          isOpen={showInvoice}
+          onClose={closeInvoice}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default OrdersPage;
