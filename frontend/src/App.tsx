@@ -14,11 +14,13 @@ import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
 import Layout from './components/Layout';
 
+import './index.css';
+
 function App() {
   return (
     <AuthProvider>
-      <PageCacheProvider maxCacheSize={25} maxCacheAge={45 * 60 * 1000}>
-        <Router>
+      <Router>
+        <PageCacheProvider maxCacheSize={25} maxCacheAge={45 * 60 * 1000}>
           <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<LoginPage />} />
@@ -43,8 +45,8 @@ function App() {
             {/* Catch all route */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
-        </Router>
-      </PageCacheProvider>
+        </PageCacheProvider>
+      </Router>
     </AuthProvider>
   );
 }
