@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Search, Filter, Plus, Eye, Edit, Trash2 } from 'lucide-react';
+import { Search, Filter, Plus, Eye, Edit, Trash2, MoreHorizontal } from 'lucide-react';
 import { getJSON } from '../utils/api';
 import { Order, getStatusColor, getStatusIcon } from '../utils/data';
 
@@ -185,3 +185,5 @@ const OrdersPage: React.FC = () => {
     </div>
   );
 }
+
+export default OrdersPage;
