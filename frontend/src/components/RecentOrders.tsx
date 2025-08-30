@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Order } from '../types';
 import { getStatusColor, getPlatformColor, getStatusIcon } from '../utils/data';
 import { Clock, Eye, ExternalLink } from 'lucide-react';
@@ -8,6 +9,8 @@ interface RecentOrdersProps {
 }
 
 const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
+  const navigate = useNavigate();
+  
   // Company logo mapping with proper colors
   const getCompanyLogo = (platformName: string) => {
     const logos: Record<string, { logo: string; bgColor: string; textColor: string }> = {
@@ -22,7 +25,7 @@ const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
   };
 
   const handleViewAll = () => {
-    window.location.href = '/orders';
+    navigate('/orders');
   };
 
   return (
@@ -101,7 +104,11 @@ const RecentOrders: React.FC<RecentOrdersProps> = ({ orders }) => {
                     </div>
                   </td>
                   <td>
-                    <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200">
+                    <button 
+                      onClick={() => navigate(`/orders/${order.id}`)}
+                      className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                      title="View Details"
+                    >
                       <Eye className="w-4 h-4" />
                     </button>
                   </td>

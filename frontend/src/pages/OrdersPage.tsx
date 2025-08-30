@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Filter, Plus, Eye, Edit, Trash2, MoreHorizontal, FileText } from 'lucide-react';
 import { getJSON } from '../utils/api';
 import { Order, getStatusColor, getStatusIcon } from '../utils/data';
 import InvoiceGenerator from '../components/InvoiceGenerator';
 
 const OrdersPage: React.FC = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -179,7 +181,11 @@ const OrdersPage: React.FC = () => {
                           >
                             <FileText className="w-4 h-4" />
                           </button>
-                          <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200">
+                          <button 
+                            onClick={() => navigate(`/orders/${order.id}`)}
+                            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                            title="View Details"
+                          >
                             <Eye className="w-4 h-4" />
                           </button>
                           <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200">

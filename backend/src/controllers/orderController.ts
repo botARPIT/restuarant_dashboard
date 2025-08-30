@@ -4,11 +4,101 @@ import { Order, ApiResponse, PaginatedResponse } from '../types';
 // Mock orders data - in production this would come from database
 let mockOrders: Order[] = [
   {
-    id: 'ZOM-001',
-    status: 'preparing',
+    id: 'ORD001',
+    status: 'delivered',
     customer: 'John Doe',
     customerEmail: 'john@example.com',
     customerPhone: '+91-9876543210',
+    time: '2 hours ago',
+    items: [
+      { name: 'Butter Chicken', quantity: 1, price: 280, category: 'Main Course' },
+      { name: 'Naan', quantity: 2, price: 85, category: 'Bread' }
+    ],
+    totalPrice: 450,
+    eta: '1:15 PM',
+    platform: 'Zomato',
+    platformOrderId: 'ZOM123456',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'ORD002',
+    status: 'preparing',
+    customer: 'Jane Smith',
+    customerEmail: 'jane@example.com',
+    customerPhone: '+91-9876543211',
+    time: '1 hour ago',
+    items: [
+      { name: 'Biryani', quantity: 1, price: 320, category: 'Main Course' },
+      { name: 'Raita', quantity: 1, price: 60, category: 'Side Dish' }
+    ],
+    totalPrice: 380,
+    eta: '1:20 PM',
+    platform: 'Swiggy',
+    platformOrderId: 'SWG789012',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'ORD003',
+    status: 'ready',
+    customer: 'Mike Johnson',
+    customerEmail: 'mike@example.com',
+    customerPhone: '+91-9876543212',
+    time: '30 mins ago',
+    items: [
+      { name: 'Tandoori Chicken', quantity: 1, price: 420, category: 'Main Course' },
+      { name: 'Dal', quantity: 1, price: 100, category: 'Side Dish' }
+    ],
+    totalPrice: 520,
+    eta: '1:25 PM',
+    platform: 'UberEats',
+    platformOrderId: 'UBER345678',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'ORD004',
+    status: 'pending',
+    customer: 'Sarah Wilson',
+    customerEmail: 'sarah@example.com',
+    customerPhone: '+91-9876543213',
+    time: '15 mins ago',
+    items: [
+      { name: 'Paneer Tikka', quantity: 1, price: 280, category: 'Main Course' },
+      { name: 'Rice', quantity: 1, price: 40, category: 'Rice' }
+    ],
+    totalPrice: 320,
+    eta: '1:30 PM',
+    platform: 'Zomato',
+    platformOrderId: 'ZOM901234',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'ORD005',
+    status: 'cancelled',
+    customer: 'David Brown',
+    customerEmail: 'david@example.com',
+    customerPhone: '+91-9876543214',
+    time: '45 mins ago',
+    items: [
+      { name: 'Chicken Curry', quantity: 1, price: 320, category: 'Main Course' },
+      { name: 'Roti', quantity: 2, price: 45, category: 'Bread' }
+    ],
+    totalPrice: 410,
+    eta: '1:35 PM',
+    platform: 'Swiggy',
+    platformOrderId: 'SWG567890',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'ZOM-001',
+    status: 'preparing',
+    customer: 'Alex Chen',
+    customerEmail: 'alex@example.com',
+    customerPhone: '+91-9876543215',
     time: '12:45 PM',
     items: [
       { name: 'Butter Chicken', quantity: 1, price: 450, category: 'Main Course' },
@@ -17,7 +107,7 @@ let mockOrders: Order[] = [
     ],
     totalPrice: 850,
     eta: '1:15 PM',
-    platform: 'zomato',
+    platform: 'Zomato',
     platformOrderId: 'ZOM123456',
     createdAt: new Date(),
     updatedAt: new Date()
@@ -25,9 +115,9 @@ let mockOrders: Order[] = [
   {
     id: 'SWG-002',
     status: 'ready',
-    customer: 'Sarah Wilson',
-    customerEmail: 'sarah@example.com',
-    customerPhone: '+91-9876543211',
+    customer: 'Emma Davis',
+    customerEmail: 'emma@example.com',
+    customerPhone: '+91-9876543216',
     time: '12:50 PM',
     items: [
       { name: 'Margherita Pizza', quantity: 1, price: 550, category: 'Pizza' },
@@ -35,7 +125,7 @@ let mockOrders: Order[] = [
     ],
     totalPrice: 650,
     eta: '1:20 PM',
-    platform: 'swiggy',
+    platform: 'Swiggy',
     platformOrderId: 'SWG789012',
     createdAt: new Date(),
     updatedAt: new Date()
